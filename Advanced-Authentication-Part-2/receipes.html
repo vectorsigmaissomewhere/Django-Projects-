@@ -1,0 +1,89 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Recipes</title>
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0-alpha1/dist/css/bootstrap.min.css" rel="stylesheet">
+</head>
+<body>
+  <nav class="navbar dark p-2 bg-primary shadow-lg">
+    <div class="container-fluid">
+      <a class="navbar-brand">Navbar</a>
+      {% if request.user.is_authenticated %}
+        <a href="/logout/" class="btn btn-success" type="submit">Logout</a>
+      {% else %}
+        <a href="/login/" class="btn btn-success" type="submit">Login</a>
+      {% endif %}
+    </div>
+  </nav>
+  {{ request.user }}
+  {{ request.user.first_name }}
+  {{ request.user.last_name }}
+    <div class="container mt-5">
+        <form class="col-6 mx-auto card p-3 shadow" method="post" enctype="multipart/form-data">
+            {% csrf_token %}
+            <h2>Add Recipe</h2>
+            <hr>
+            <div class="mb-3">
+              <label for="exampleInputEmail1" class="form-label">Recipe name</label>
+              <input name="receipe_name" required type="text" class="form-control">
+            </div>
+            <div class="mb-3">
+              <label for="exampleInputPassword1" class="form-label">Recipe Description</label>
+              <textarea class="form-control" name="receipe_description" required></textarea>
+            </div>
+            <div class="mb-3">
+                <label for="exampleInputPassword1" class="form-label">Recipe Image</label>
+                <input name="receipe_image" type="file" class="form-control">
+              </div>
+            <button type="submit" class="btn btn-success">Add Recipe</button>
+          </form>
+
+          <hr>
+          <div class="mt-5">
+            <div class="mx-auto col-6">
+              <form>
+              <div class="mb-3">
+                <label for="exampleInputEmail1" class="form-label">Search Food</label>
+                <input name="search" type="text" class="form-control">
+              </div>
+
+              <button type="submit" class="btn btn-primary">Search</button>
+            </form>
+            </div>
+          </div>
+        <!-- Printing recipe-->
+        {{ recipes }}
+        <table class="table mt-5">
+          <thead>
+            <tr>
+              <th scope="col">#</th>
+              <th scope="col">Recipe name</th>
+              <th scope="col">Recipe Description</th>
+              <th scope="col">Image</th>
+              <th scope="col">Actions</th>
+            </tr>
+          </thead>
+          <tbody>
+            {% for recipe in recipes %}
+            <tr>
+              <th scope="row">{{ forloop.counter }}</th>
+              <td>{{ recipe.receipe_name }}</td>
+              <td>{{ recipe.receipe_description }}</td>
+              <td>
+                <img src="/media/{{ recipe.receipe_image }}" style="height: 100px;">
+              </td>
+              <td>
+                <a href="/delete-recipe/{{ recipe.id }}/" class="btn btn-danger m-2">Delete</a>
+                <a href="/update-recipe/{{ recipe.id }}/" class="btn btn-success">Update</a>
+              </td>
+            </tr>
+            {% endfor %}
+          </tbody>
+        </table>
+    </div>
+
+</body>
+</html>
+
