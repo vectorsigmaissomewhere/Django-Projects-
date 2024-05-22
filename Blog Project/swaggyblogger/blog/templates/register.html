@@ -1,0 +1,95 @@
+{% load static %}
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link rel="stylesheet" href="{% static 'css/register.css' %}">
+    <title>Document</title>
+    <script>
+        function validate() {
+            var fullname = document.form.name.value;
+            var username = document.form.uname.value;
+            var email = document.form.email.value;
+            var phonenumber = document.form.phone.value;
+            var password = document.form.password.value;
+            var conpassword = document.form.confirmPassword.value; 
+
+            if (fullname.trim() === "") {
+                alert("Full Name can't be blank");
+                return false;
+            }
+            else if (email.trim() === "") {
+                alert("Email can't be blank");
+                return false;
+            }
+            else if (username.trim() === "") {
+                alert("Username can't be blank");
+                return false;
+            }
+            else if (password.length < 6) {
+                alert("Password must be at least 6 characters long.")
+                return false;
+            }
+            else if (password !== conpassword) { 
+                alert("Confirm Password should match with the Password");
+                return false;
+            }
+            else if (phonenumber.length !== 10) {
+                alert("Enter a valid phone number")
+                return false;
+            }
+            return true; 
+        }
+    </script>    
+</head>
+<body>
+    <div class="container">
+        <form action="" method="POST" name="form" onsubmit="return validate()">
+            <h2>Register to SwaggyBlogger</h2>
+            <div class="content">
+                <div class="input-box">
+                    <label for="name">Full Name</label>
+                    <input type="text" placeholder="Enter full name" name="name" required>
+                </div>
+                <div class="input-box">
+                    <label for="username">Username</label>
+                    <input type="text" placeholder="Enter username" name="username" required>
+                </div>
+                <div class="input-box">
+                    <label for="email">Email</label>
+                    <input type="email" placeholder="Enter your valid email address" name="email" required>
+                </div>
+                <div class="input-box">
+                    <label for="phone">Phone Number</label>
+                    <input type="tel" placeholder="Enter phone number" name="phone" required>
+                </div>
+                <div class="input-box">
+                    <label for="confirm-password">Password</label>
+                    <input type="password" placeholder="Enter new password" name="password" required>
+                </div>
+                <div class="input-box">
+                    <label for="confirm-password">Confirm Password</label>
+                    <input type="password" placeholder="Confirm your password" name="confirmPassword" required>
+                </div>
+                <span class="gender-title">Gender</span>
+                <div class="gender-category">
+                    <input type="radio" name="gender" id="male">
+                    <label for="make">Male</label>
+                    <input type="radio" name="gender" id="female">
+                    <label for="female">Female</label>
+                    <input type="radio" name="gender" id="other">
+                    <label for="other">Other</label>
+                </div>
+
+                <div class="alert">
+                    <p>By clicking Sign up, you agree to our<a href="#">Terms, Privacy Policy</a> and <a href="#">Cookies Policy</a>You may receive SMS notification from us and can opt out at any time</p>
+                </div>
+                <div class="button-container">
+                    <button type="submit">Register</button>
+                </div>
+            </div>
+        </form>
+    </div>
+</body>
+</html>
