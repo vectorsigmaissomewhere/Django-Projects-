@@ -1,6 +1,6 @@
-## Hotel Management Syste 
+## Hotel Management System 
 
-Model
+Model of the application
 ```python
 from django.contrib.auth.models import User
 from django.db import models
@@ -46,7 +46,7 @@ class HotelBooking(BaseModel):
 
 ```
 
-Login and registration
+Login and registration Feature
 
 login
 ```html
