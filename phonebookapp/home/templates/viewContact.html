@@ -1,0 +1,33 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>View Contact Page</title>
+<link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css">
+</head>
+<body>
+  {% include 'header.html' %}
+  <div class="container">
+    <h2 class="text-center my-4">My Contacts</h2>
+    <div class="row">
+      <div class="col-md-8 offset-md-2">
+        <ul class="list-group">
+          {% for contact in contacts %}
+            <li class="list-group-item">
+              <strong>{{ contact.name }}</strong><br>
+              <em>{{ contact.address }}</em><br>
+              {{ contact.phonenumber }}
+            </li>
+          {% empty %}
+            <li class="list-group-item">No contacts added yet.</li>
+          {% endfor %}
+        </ul>
+      </div>
+    </div>
+  </div>
+<footer class="text-center mt-5">
+  <p>&copy; 2024 PhoneBook App</p>
+</footer>
+</body>
+</html>
