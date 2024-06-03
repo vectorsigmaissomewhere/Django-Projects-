@@ -1,0 +1,45 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Add Contact Page</title>
+<link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css">
+</head>
+<body>
+{% include 'header.html' %}
+<div class="container-fluid">
+  <div class="row p-2">
+    <div class="col-md-6 offset-md-3">
+      <div class="card">
+        <div class="card-body">
+          <h4 class="text-center text-success">Add Contact Page</h4>
+          <form method="POST" action="{% url 'addContact' %}">
+            {% csrf_token %}
+            {% include "messages.html" %}
+            <div class="form-group">
+              <label for="name">Enter Name</label>
+              <input type="text" name="name" class="form-control" id="name" placeholder="Enter name">
+            </div>
+            <div class="form-group">
+              <label for="email">Email address</label>
+              <input type="email" name="address" class="form-control" id="email" placeholder="Enter email">
+            </div>
+            <div class="form-group">
+              <label for="phone">Enter Phone Number</label>
+              <input type="text" name="phonenumber" class="form-control" id="phone" placeholder="Enter phone number">
+            </div>
+            <div class="text-center mt-2">
+              <button type="submit" class="btn btn-primary">Register</button>
+            </div>
+          </form>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+<footer class="text-center mt-5">
+  <p>&copy; 2024 PhoneBook App</p>
+</footer>
+</body>
+</html>
