@@ -9,6 +9,8 @@ What to learn
 
 Django Core Concepts
 
+    - Django Rest Practices
+
     - Cookies
 
     - Custom User Model
