@@ -5,25 +5,26 @@ Tick Mark Which concept you know
 ```text
 Tick Mark karle Betey
 ```
+What to learn
 
 Django Core Concepts
 
-Cookies
+    - Cookies
 
-Custom User Model
+    - Custom User Model
 
-Mixins
+    - Mixins
 
-Custom Middleware
+    - Custom Middleware
 
-Reset Migrations
+    - Reset Migrations
 
-Best database
+    - Best database
 
-Redirect Signals
+    - Redirect Signals
 
-ORM
+    - ORM
 
-URLS
+    - URLS
 
-Request and Response Cycle
+    - Request and Response Cycle
