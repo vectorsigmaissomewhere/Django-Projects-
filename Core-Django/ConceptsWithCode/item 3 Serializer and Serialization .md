@@ -85,7 +85,7 @@ class Student(models.Model):
 ```
 
 Process
-``text
+```text
 Convert python data to json data to client 
 Convert client json data to python 
 ```
@@ -153,7 +153,7 @@ from rest_framework.renderers import JSONRenderer
 
 After this render the data into json
 json_data = JSONRenderer().render(serializer.data)
-``
+```
 
 
 Revision
