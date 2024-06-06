@@ -39,3 +39,9 @@ Other Tool and Libraries
     - Unix/Linux commands and scripting
     - Server side templating langauge example Mako, Jinja2, etc
     - ORM libraries
+
+Projects preventing security isses 
+
+    - SQL injection
+    - cross site scripting
+    - clickjacking
