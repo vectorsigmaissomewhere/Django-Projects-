@@ -37,6 +37,6 @@ Install using pip
 Make changes in setting.py
 Settings.py
 INSTALLED APPS=[
-'rest_framework'.
+'rest_framework',
 ]
 ```
