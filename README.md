@@ -30,3 +30,12 @@ Django Core Concepts
     - URLS
 
     - Request and Response Cycle
+
+
+Other Tool and Libraries
+
+    - Docker
+    - Git 
+    - Unix/Linux commands and scripting
+    - Server side templating langauge example Mako, Jinja2, etc
+    - ORM libraries
