@@ -45,3 +45,7 @@ Projects preventing security isses
     - SQL injection
     - cross site scripting
     - clickjacking
+
+Django rest framework Website 
+
+    - https://www.cdrf.co/
