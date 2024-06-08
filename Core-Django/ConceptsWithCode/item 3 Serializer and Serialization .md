@@ -556,4 +556,41 @@ print(data)
 output
 ```text
 [{'name': 'Ronaldo', 'roll': 7, 'city': 'Lisbon'}, {'name': 'Messi', 'roll': 10, 'city': 'Argentina'}, {'name': 'Mbappe', 'roll': 1, 'city': 'Paris'}]
+
+
+5 Convert and send json data in one line
+
+
+views.py
+```python
+from django.shortcuts import render
+from .models import Student
+from .serializers import StudentSerializer
+from rest_framework.renderers import JSONRenderer
+from rest_framework.response import Response
+from django.http import HttpResponse, JsonResponse
+
+
+# Create your views here.
+# Model Object - Single Student Data
+
+def student_detail(request,pk):
+    stu = Student.objects.get(id=pk)  # select the model objecgt
+    serializer = StudentSerializer(stu)  # serialize stu model object which is converted into python data
+    # json_data = JSONRenderer().render(serializer.data)  # converted into json data
+    # return HttpResponse(json_data, content_type='application/json')  # sending data of type json
+    return JsonResponse(serializer.data)
+
+# QuerySet - All student data
+def student_list(request):
+    stu = Student.objects.all() # select the model objecgt
+    serializer = StudentSerializer(stu , many=True)  # serialize stu model object which is converted into python data
+    json_data = JSONRenderer().render(serializer.data)  # converted into json data
+    return HttpResponse(json_data, content_type='application/json')  # sending data of type json
+```
+
+output
+```text
+url : http://127.0.0.1:8000/stuinfo/1
+output : {"name": "Ronaldo", "roll": 7, "city": "Lisbon"}
 ```
