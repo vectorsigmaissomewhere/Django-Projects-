@@ -3,6 +3,6 @@
 must use things
 
 installing django rest framework
-``text
+```text
 pip3 install djangorestframework 
 ```
