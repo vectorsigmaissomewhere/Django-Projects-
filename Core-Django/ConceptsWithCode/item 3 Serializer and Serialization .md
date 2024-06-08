@@ -453,6 +453,7 @@ b'{"name":"Messi","roll":10,"city":"Argentina"}'
 ```
 
 3. Get json data according to the url
+   
 urls.py
 ```python
 from django.contrib import admin
