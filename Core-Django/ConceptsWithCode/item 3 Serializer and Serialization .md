@@ -406,4 +406,12 @@ urlpatterns = [
 ]
 ```
 
+Output
+```text
+model object in django  format
+in stuinfo/ url
+for example, output
+{"name":"Messi","roll":10,"city":"Argentina"}
+```
+
 
