@@ -553,3 +553,7 @@ r = requests.get(url = URL)
 data = r.json()
 print(data)
 ```
+output
+```text
+[{'name': 'Ronaldo', 'roll': 7, 'city': 'Lisbon'}, {'name': 'Messi', 'roll': 10, 'city': 'Argentina'}, {'name': 'Mbappe', 'roll': 1, 'city': 'Paris'}]
+```
