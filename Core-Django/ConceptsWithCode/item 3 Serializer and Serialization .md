@@ -205,3 +205,205 @@ json_data = JSONRenderer().render(serializer.data)
 Model Object 1 converted to Python Dict  converted to Json Data
 and the above are the statement to convert 
 ```
+
+
+
+
+
+## Coding part
+
+1. serialization of one model object
+
+file structure
+```text
+api
+- admin.py
+- models.py
+- serializers.py
+- views.py
+
+gs1
+- settings.py
+- urls.py
+```
+
+admin.py
+```python
+from django.contrib import admin
+from .models import Student
+
+# Register your models here.
+@admin.register(Student)
+class StudentAdmin(admin.ModelAdmin):
+    list_display = ['id','name','roll','city']
+```
+
+models.py
+```python
+from django.db import models
+
+# Create your models here.
+class Student(models.Model):
+    name = models.CharField(max_length=100)
+    roll = models.IntegerField()
+    city  = models.CharField(max_length=100)
+```
+
+serializers.py
+```python
+from rest_framework import serializers
+
+class StudentSerializer(serializers.Serializer):
+    name = serializers.CharField(max_length=100)
+    roll = serializers.IntegerField()
+    city = serializers.CharField(max_length=100)
+```
+
+views.py
+```python
+from django.shortcuts import render
+from .models import Student
+from .serializers import StudentSerializer
+from rest_framework.renderers import JSONRenderer
+from rest_framework.response import Response
+from django.http import HttpResponse
+
+# Create your views here.
+# Model Object - Single Student Data
+
+def student_detail(request):
+    stu = Student.objects.get(id=2)  # select the model objecgt
+    serializer = StudentSerializer(stu)  # serialize stu model object which is converted into python data
+    json_data = JSONRenderer().render(serializer.data)  # converted into json data
+    return HttpResponse(json_data, content_type='application/json')  # sending data of type json
+```
+
+
+```settings.py
+from pathlib import Path
+
+# Build paths inside the project like this: BASE_DIR / 'subdir'.
+BASE_DIR = Path(__file__).resolve().parent.parent
+
+
+# Quick-start development settings - unsuitable for production
+# See https://docs.djangoproject.com/en/5.0/howto/deployment/checklist/
+
+# SECURITY WARNING: keep the secret key used in production secret!
+SECRET_KEY = 'django-insecure-k8xn5=8f2s98nx0*(yb@_1m)(_dxye^!!m_6(!6^^ut!orx!wm'
+
+# SECURITY WARNING: don't run with debug turned on in production!
+DEBUG = True
+
+ALLOWED_HOSTS = []
+
+
+# Application definition
+
+INSTALLED_APPS = [
+    'django.contrib.admin',
+    'django.contrib.auth',
+    'django.contrib.contenttypes',
+    'django.contrib.sessions',
+    'django.contrib.messages',
+    'django.contrib.staticfiles',
+    'api',
+    'rest_framework',
+]
+
+MIDDLEWARE = [
+    'django.middleware.security.SecurityMiddleware',
+    'django.contrib.sessions.middleware.SessionMiddleware',
+    'django.middleware.common.CommonMiddleware',
+    'django.middleware.csrf.CsrfViewMiddleware',
+    'django.contrib.auth.middleware.AuthenticationMiddleware',
+    'django.contrib.messages.middleware.MessageMiddleware',
+    'django.middleware.clickjacking.XFrameOptionsMiddleware',
+]
+
+ROOT_URLCONF = 'gs1.urls'
+
+TEMPLATES = [
+    {
+        'BACKEND': 'django.template.backends.django.DjangoTemplates',
+        'DIRS': [],
+        'APP_DIRS': True,
+        'OPTIONS': {
+            'context_processors': [
+                'django.template.context_processors.debug',
+                'django.template.context_processors.request',
+                'django.contrib.auth.context_processors.auth',
+                'django.contrib.messages.context_processors.messages',
+            ],
+        },
+    },
+]
+
+WSGI_APPLICATION = 'gs1.wsgi.application'
+
+
+# Database
+# https://docs.djangoproject.com/en/5.0/ref/settings/#databases
+
+DATABASES = {
+    'default': {
+        'ENGINE': 'django.db.backends.sqlite3',
+        'NAME': BASE_DIR / 'db.sqlite3',
+    }
+}
+
+
+# Password validation
+# https://docs.djangoproject.com/en/5.0/ref/settings/#auth-password-validators
+
+AUTH_PASSWORD_VALIDATORS = [
+    {
+        'NAME': 'django.contrib.auth.password_validation.UserAttributeSimilarityValidator',
+    },
+    {
+        'NAME': 'django.contrib.auth.password_validation.MinimumLengthValidator',
+    },
+    {
+        'NAME': 'django.contrib.auth.password_validation.CommonPasswordValidator',
+    },
+    {
+        'NAME': 'django.contrib.auth.password_validation.NumericPasswordValidator',
+    },
+]
+
+
+# Internationalization
+# https://docs.djangoproject.com/en/5.0/topics/i18n/
+
+LANGUAGE_CODE = 'en-us'
+
+TIME_ZONE = 'UTC'
+
+USE_I18N = True
+
+USE_TZ = True
+
+
+# Static files (CSS, JavaScript, Images)
+# https://docs.djangoproject.com/en/5.0/howto/static-files/
+
+STATIC_URL = 'static/'
+
+# Default primary key field type
+# https://docs.djangoproject.com/en/5.0/ref/settings/#default-auto-field
+
+DEFAULT_AUTO_FIELD = 'django.db.models.BigAutoField'
+```
+
+urls.py
+```python
+from django.contrib import admin
+from django.urls import path
+from api import views
+urlpatterns = [
+    path('admin/', admin.site.urls),
+    path('stuinfo/',views.student_detail),
+]
+```
+
+
