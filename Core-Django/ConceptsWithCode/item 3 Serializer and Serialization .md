@@ -579,18 +579,24 @@ def student_detail(request,pk):
     serializer = StudentSerializer(stu)  # serialize stu model object which is converted into python data
     # json_data = JSONRenderer().render(serializer.data)  # converted into json data
     # return HttpResponse(json_data, content_type='application/json')  # sending data of type json
-    return JsonResponse(serializer.data)
+    return JsonResponse(serializer.data) # this is dict 
 
 # QuerySet - All student data
 def student_list(request):
     stu = Student.objects.all() # select the model objecgt
     serializer = StudentSerializer(stu , many=True)  # serialize stu model object which is converted into python data
-    json_data = JSONRenderer().render(serializer.data)  # converted into json data
-    return HttpResponse(json_data, content_type='application/json')  # sending data of type json
+    # son_data = JSONRenderer().render(serializer.data)  # converted into json data
+    # return HttpResponse(json_data, content_type='application/json')  # sending data of type json
+    return JsonResponse(serializer.data,safe=False) # non dict data so using safe = False 
 ```
 
 output
 ```text
 url : http://127.0.0.1:8000/stuinfo/1
 output : {"name": "Ronaldo", "roll": 7, "city": "Lisbon"}
+
+url : http://127.0.0.1:8000/stuinfo/
+output : [{"name": "Ronaldo", "roll": 7, "city": "Lisbon"}, {"name": "Messi", "roll": 10, "city": "Argentina"}, {"name": "Mbappe", "roll": 1, "city": "Paris"}]
 ```
+
+
