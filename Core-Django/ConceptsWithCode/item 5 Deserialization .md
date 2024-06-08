@@ -71,3 +71,12 @@ class StudentSerializer(serializers.Serializer):
 	def create(self, validate_data):
 		return Student.objects.create(**validate_data)
 ```
+
+## Coding part 
+
+## main objective : other company application sending data into our application
+sending data from frontend
+```text
+myapp.py is sending post request to views.py
+and the data is coming to views.py
+```
