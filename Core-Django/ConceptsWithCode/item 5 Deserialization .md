@@ -11,7 +11,7 @@ process
 ```text
 jsondata ----->Python Native Datatype---------->ComplexDataType
 
-first parse data the do de-serialization
+first parse data then do de-serialization
 ```
 Things to learn before doing de-serialization
 
