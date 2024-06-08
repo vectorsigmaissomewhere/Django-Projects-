@@ -599,4 +599,23 @@ url : http://127.0.0.1:8000/stuinfo/
 output : [{"name": "Ronaldo", "roll": 7, "city": "Lisbon"}, {"name": "Messi", "roll": 10, "city": "Argentina"}, {"name": "Mbappe", "roll": 1, "city": "Paris"}]
 ```
 
+6 To see the id as we are not getting id in output
+
+in model, id is auto generated. Here you must need to mention id to see id
+serializers.py
+```python
+from rest_framework import serializers
+
+class StudentSerializer(serializers.Serializer):
+    id = serializers.IntegerField()
+    name = serializers.CharField(max_length=100)
+    roll = serializers.IntegerField()
+    city = serializers.CharField(max_length=100)
+```
+
+Output
+```text
+url : http://127.0.0.1:8000/stuinfo/
+output : [{"id": 1, "name": "Ronaldo", "roll": 7, "city": "Lisbon"}, {"id": 2, "name": "Messi", "roll": 10, "city": "Argentina"}, {"id": 3, "name": "Mbappe", "roll": 1, "city": "Paris"}]
+```
 
