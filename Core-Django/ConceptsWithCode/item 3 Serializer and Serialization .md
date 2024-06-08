@@ -415,3 +415,40 @@ for example, output
 ```
 
 
+2. Anatomy of model object
+   
+views.py
+```python
+from django.shortcuts import render
+from .models import Student
+from .serializers import StudentSerializer
+from rest_framework.renderers import JSONRenderer
+from rest_framework.response import Response
+from django.http import HttpResponse
+
+# Create your views here.
+# Model Object - Single Student Data
+
+def student_detail(request):
+    stu = Student.objects.get(id=2)  # select the model objecgt
+    print(stu)
+    serializer = StudentSerializer(stu)  # serialize stu model object which is converted into python data
+    print(serializer)
+    print(serializer.data)
+    json_data = JSONRenderer().render(serializer.data)  # converted into json data
+    print(json_data)
+    return HttpResponse(json_data, content_type='application/json')  # sending data of type json
+```
+
+Output
+```text
+Student object (2)
+StudentSerializer(<Student: Student object (2)>):
+    name = CharField(max_length=100)
+    roll = IntegerField()
+    city = CharField(max_length=100)
+{'name': 'Messi', 'roll': 10, 'city': 'Argentina'}
+b'{"name":"Messi","roll":10,"city":"Argentina"}'
+[08/Jun/2024 07:22:10] "GET /stuinfo/ HTTP/1.1" 200 45
+```
+
