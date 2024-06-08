@@ -212,6 +212,17 @@ and the above are the statement to convert
 
 ## Coding part
 
+coding part topics
+```text
+1 Serialization of one model object
+2 Anatomy of model object
+3 Get json data according to the url
+4 QuerySet get all students data
+5 Access our API with python code
+6 Convert and send json data in one line
+7 To see the id as we are not getting id in output
+8 
+```
 1. serialization of one model object
 
 file structure
@@ -493,7 +504,7 @@ http://127.0.0.1:8000/stuinfo/2
 output : {"name":"Messi","roll":10,"city":"Argentina"}
 ```
 
-3 QuerySet get all students data
+4 QuerySet get all students data
 
 views.py
 ```python
@@ -539,7 +550,7 @@ url: http://127.0.0.1:8000/stuinfo/
 output : [{"name":"Ronaldo","roll":7,"city":"Lisbon"},{"name":"Messi","roll":10,"city":"Argentina"},{"name":"Mbappe","roll":1,"city":"Paris"}]
 ```
 
-4 Access our API with python code
+5 Access our API with python code
 
 create app.py inside project folder 
 
@@ -558,7 +569,7 @@ output
 [{'name': 'Ronaldo', 'roll': 7, 'city': 'Lisbon'}, {'name': 'Messi', 'roll': 10, 'city': 'Argentina'}, {'name': 'Mbappe', 'roll': 1, 'city': 'Paris'}]
 ```
 
-5 Convert and send json data in one line
+6 Convert and send json data in one line
 
 
 views.py
@@ -599,7 +610,7 @@ url : http://127.0.0.1:8000/stuinfo/
 output : [{"name": "Ronaldo", "roll": 7, "city": "Lisbon"}, {"name": "Messi", "roll": 10, "city": "Argentina"}, {"name": "Mbappe", "roll": 1, "city": "Paris"}]
 ```
 
-6 To see the id as we are not getting id in output
+7 To see the id as we are not getting id in output
 
 in model, id is auto generated. Here you must need to mention id to see id
 serializers.py
