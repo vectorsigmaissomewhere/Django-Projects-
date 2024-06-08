@@ -556,7 +556,7 @@ print(data)
 output
 ```text
 [{'name': 'Ronaldo', 'roll': 7, 'city': 'Lisbon'}, {'name': 'Messi', 'roll': 10, 'city': 'Argentina'}, {'name': 'Mbappe', 'roll': 1, 'city': 'Paris'}]
-
+```
 
 5 Convert and send json data in one line
 
