@@ -538,3 +538,18 @@ Output
 url: http://127.0.0.1:8000/stuinfo/
 output : [{"name":"Ronaldo","roll":7,"city":"Lisbon"},{"name":"Messi","roll":10,"city":"Argentina"},{"name":"Mbappe","roll":1,"city":"Paris"}]
 ```
+
+4 Access our API with python code
+
+create app.py inside project folder 
+
+app.py
+```python
+import requests
+URL = "http://127.0.0.1:8000/stuinfo/"
+
+r = requests.get(url = URL)
+
+data = r.json()
+print(data)
+```
