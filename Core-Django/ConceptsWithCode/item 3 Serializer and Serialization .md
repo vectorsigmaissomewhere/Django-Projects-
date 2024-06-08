@@ -452,3 +452,42 @@ b'{"name":"Messi","roll":10,"city":"Argentina"}'
 [08/Jun/2024 07:22:10] "GET /stuinfo/ HTTP/1.1" 200 45
 ```
 
+3. Get json data according to the url
+urls.py
+```python
+from django.contrib import admin
+from django.urls import path
+from api import views
+urlpatterns = [
+    path('admin/', admin.site.urls),
+    path('stuinfo/<int:pk>',views.student_detail),
+]
+```
+
+views.py
+```python
+from django.shortcuts import render
+from .models import Student
+from .serializers import StudentSerializer
+from rest_framework.renderers import JSONRenderer
+from rest_framework.response import Response
+from django.http import HttpResponse
+
+# Create your views here.
+# Model Object - Single Student Data
+
+def student_detail(request,pk):
+    stu = Student.objects.get(id=pk)  # select the model objecgt
+    serializer = StudentSerializer(stu)  # serialize stu model object which is converted into python data
+    json_data = JSONRenderer().render(serializer.data)  # converted into json data
+    return HttpResponse(json_data, content_type='application/json')  # sending data of type json
+```
+
+output
+```text
+http://127.0.0.1:8000/stuinfo/1
+output : {"name":"Ronaldo","roll":7,"city":"Lisbon"}
+
+http://127.0.0.1:8000/stuinfo/2
+output : {"name":"Messi","roll":10,"city":"Argentina"}
+```
