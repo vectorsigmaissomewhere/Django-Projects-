@@ -3,7 +3,8 @@
 Tick Mark Which concept you know
 
 ```text
-Tick Mark karle Betey
+drf 20 percent 
+orm 
 ```
 What to learn
 
