@@ -2,6 +2,10 @@ from django.contrib.auth.models import User
 from django.db import models
 import uuid
 
+# This is the model that other models inherits
+"""
+like the Contact model can use the BaseModel attributes
+"""
 class BaseModel(models.Model):
     uid = models.UUIDField(default=uuid.uuid4, editable=False, primary_key=True)
     created_at = models.DateField(auto_now_add=True)
