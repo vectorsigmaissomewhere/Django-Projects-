@@ -48,7 +48,7 @@ if serializer.is_valid():
 
 ## First Program get all the data into third party application
 admin.py
-```text
+```python
 from django.contrib import admin
 from .models import Student
 
@@ -59,7 +59,7 @@ class StudentAdmin(admin.ModelAdmin):
 ```
 
 models.py
-```text
+```python
 from django.db import models
 
 # Create your models here.
@@ -70,7 +70,7 @@ class Student(models.Model):
 ```
 
 serializers.py
-```text
+```python
 from rest_framework import serializers
 from .models import Student
 
@@ -81,7 +81,7 @@ class StudentSerializer(serializers.ModelSerializer):
 ```
 
 views.py
-```text
+```python
 from django.shortcuts import render
 import io
 from rest_framework.parsers import JSONParser
@@ -112,7 +112,7 @@ def student_api(request):
 ```
 
 urls.py
-```text
+```python
 from django.contrib import admin
 from django.urls import path
 from api import views
@@ -123,7 +123,7 @@ urlpatterns = [
 ```
 
 myapp.py
-```text
+```python
 import requests
 import json
 
