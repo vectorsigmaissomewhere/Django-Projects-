@@ -10,4 +10,5 @@ pip3 install djangorestframework
 ## break or events
 ```text
 6/9/2024 10:00 AM : Taking a break
+6/19/2024 6:00PM : Back 💯
 ```
