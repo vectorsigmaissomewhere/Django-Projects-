@@ -46,7 +46,7 @@ if serializer.is_valid():
 ```
 
 
-## First Program get all the data into third party application
+## 2 FUNCTION BASED CRUD OPERATION IN DJANGO 
 admin.py
 ```python
 from django.contrib import admin
@@ -78,6 +78,20 @@ class StudentSerializer(serializers.ModelSerializer):
     class Meta:
         model = Student
         fields = ['id', 'name', 'roll', 'city']
+    # create data 
+    def create(self,validated_data):
+        return Student.objects.create(**validated_data)
+    
+    # implementing update method
+    def update(self, instance,validated_data):
+        # means if user provides data put it in here 
+        print(instance.name)
+        instance.name = validated_data.get('name',instance.name)
+        print(instance.name)
+        instance.roll = validated_data.get('roll',instance.roll)
+        instance.city = validated_data.get('city',instance.city)
+        instance.save()
+        return instance
 ```
 
 views.py
@@ -89,10 +103,13 @@ from .models import Student
 from .serializers import StudentSerializer
 from rest_framework.renderers import JSONRenderer
 from django.http import HttpResponse, JsonResponse
-from django.views.decorators.csrf import csrf_exempt
+# we have to send csrf token whenever you make post request 
+# but we cannot do this from here so , we will use csrf_exempt
+from django.views.decorators.csrf import csrf_exempt 
 
 @csrf_exempt
 def student_api(request):
+    # geting the data according to the user id 
     if request.method == 'GET':
         json_data = request.body
         stream = io.BytesIO(json_data)
@@ -109,6 +126,49 @@ def student_api(request):
         stu = Student.objects.all()
         serializer = StudentSerializer(stu, many=True)
         return JsonResponse(serializer.data, safe=False)
+    
+    # saving the data 
+    if request.method == 'POST':
+        json_data = request.body
+        stream = io.BytesIO(json_data) 
+        pythondata = JSONParser().parse(stream) # getting python data
+        serializer = StudentSerializer(data = pythondata) # converting into complex object
+        if serializer.is_valid():
+            serializer.save()
+            res = {'msg': 'Data Created'}
+            json_data = JSONRenderer().render(res)
+            return HttpResponse(json_data, content_type = 'application/json')
+        json_data = JSONRenderer().render(serializer.errors)
+        return HttpResponse(json_data,content_type = 'application/json')
+    
+    # updating the data
+    if request.method == 'PUT':
+        json_data = request.body
+        stream = io.BytesIO(json_data)
+        pythondata = JSONParser().parse(stream) # convert stream data into parsed data
+        id = pythondata.get('id') # get the id
+        stu = Student.objects.get(id = id)
+        serializer = StudentSerializer(stu, data = pythondata, partial = True) # update partial data , if False need to update all data
+        if serializer.is_valid():
+            serializer.save()
+            res = {'msg':'Data updated !!'}
+            json_data = JSONRenderer().render(res)
+            return HttpResponse(json_data,content_type = 'application/json')
+        json_data = JSONRenderer().render(serializer.errors)
+        return HttpResponse(json_data, content_type = 'application/json')
+    
+    # deleting the data, no work of serializer in this place
+    if request.method == 'DELETE':
+        json_data = request.body
+        stream = io.BytesIO(json_data)
+        pythondata = JSONParser().parse(stream)
+        id = pythondata.get('id')
+        stu = Student.objects.get(id = id)
+        stu.delete()
+        # sending response of the data is deleted
+        res = {'msg': 'Data Deleted!!'}
+        json_data = JSONRenderer().render(res)
+        return HttpResponse(json_data,content_type = 'application/json')
 ```
 
 urls.py
@@ -129,11 +189,12 @@ import json
 
 URL = "http://127.0.0.1:8000/studentapi/"
 
+# this function will give you the data according to the id 
 def get_data(id=None):
     data = {}
     if id is not None:
         data = {'id': id}
-
+ 
     r = requests.get(url=URL, json=data)
     try:
         r.raise_for_status() 
@@ -146,11 +207,54 @@ def get_data(id=None):
     except ValueError:
         print("Response content is not valid JSON")
 
-get_data(1)
+# get_data(1)
+
+# this function will send data to the server and save it into table 
+# this is in dictionary form 
+def post_data():
+    data = {
+        'name':'Ravi',
+        'roll':104,
+        'city':'Dhanbad'
+    }
+    # converting this into json form 
+    json_data = json.dumps(data)
+    r = requests.post(url = URL, data = json_data)
+    data = r.json()
+    print(data)
+
+# post_data()
+
+
+# this function will update the data with id
+# this is a partial updates as only required data is updated 
+def update_date():
+    data = {
+        'id': 7,
+        'name': 'Rohit',
+        'city': 'Ranchi'
+    }
+
+    json_data = json.dumps(data)
+    r = requests.put(url = URL, data = json_data)
+    data = r.json()
+    print(data)
+
+# update_date()
+
+# this function will delete the data based on id 
+def delete_data():
+    data = {'id':3}
+
+    json_data = json.dumps(data)
+    r = requests.delete(url = URL, data = json_data)
+    data = r.json()
+    print(data)
+delete_data()
 ```
 
 
 output
 ```text
-{'id': 1, 'name': 'Ronaldo', 'roll': 7, 'city': 'Lisbon'}
+the third party application user will get message like data deleted
 ```
