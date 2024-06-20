@@ -12,3 +12,13 @@ pip3 install djangorestframework
 6/9/2024 10:00 AM : Taking a break
 6/19/2024 6:00PM : Back 💯
 ```
+
+## Things to complete
+```text
+Core Python
+Advance Python
+Html, Css , Javascript, Tailwind CSS
+Ajax and Json
+Database(SQL), Cassandra etc
+Django
+```
