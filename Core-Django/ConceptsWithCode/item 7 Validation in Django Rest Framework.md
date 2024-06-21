@@ -314,7 +314,7 @@ about the example program
 A person named rohit must be of city ranchi
 ```
 
-Example with code with FIELD LEVEL VALIDATION AND OBJECT LEVEL VALIDATION
+## Example with code with FIELD LEVEL VALIDATION AND OBJECT LEVEL VALIDATION
 
 admin.py
 ```python
@@ -546,3 +546,53 @@ Here we are doing field level validation and object level validation
 field level validation for roll number and 
 object level validation for name and city
 ```
+
+## 3 Validators
+
+about validators
+```text
+Most of the time you're dealing with validation in REST framework you'll simply be
+replying on the default field validation, or writing explict validation methods on
+serializer or field classes.
+
+However, sometimes you'll want to place your validation logic into reusabele
+components, so that it can easily be reused throughout your codebase. This can be 
+achieved by using validator functions and validator classes.
+```
+
+Advantages of Validators
+```text
+REST framework the validation is performed entirely on the serializer class. This is 
+advantageous for the following reasons:
+
+- It introduces a proper seperation of concerns, making your code behaviourt more
+obvious
+- It is easy to switch between using shortcut ModelSerializer classes and using explict
+Serializer classes. Any validation behavior being used for ModelSerializer is simple 
+to replicate
+- Printing the repr() of a serializer instance will show you exactly what validation
+rules it applies. There's no extra hidden validation behavior being called on the model 
+instance.
+```
+
+Example 
+```text
+from rest_framework import serializers
+def starts_with_r(value):
+    if value['0'].lower() != 'r':
+        raise serializers.ValidationError('Name should start with R')
+
+class StudentSerializer(serlializer.Serializer):
+    name = serializers.CharField(max_length = 100, validators = [start_with_r]) 
+    roll = serializers.IntegerField()
+    city = serializers.CharField(max_length = 100)
+```
+
+about example
+```text
+name should start with r 
+and you must have to mention
+validators = [start_with_r]
+```
+
+
