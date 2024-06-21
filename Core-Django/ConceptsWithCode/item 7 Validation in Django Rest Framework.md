@@ -16,7 +16,7 @@ validate_fieldName methods should return the validated value
 or raise a serializers.ValidationError
 
 Syntax:- def validate_roll(self,value)
-Example:- def validate_rolll(self,value)
+Example:- def validate_roll(self,value)
 Where, value is the field value that requires validation
 ```
 
