@@ -6,7 +6,7 @@ Field Level Validation
 Object Level Validation
 Validators
 ```
-1 Field Level Validation
+## 1 Field Level Validation
 ```text
 We can specify custom field-lebel validation by adding 
 validate_fieldName methods to your Seerializer subclass
@@ -277,4 +277,39 @@ Important files to check to learn
 - serializers.py
 - myapp.py
 - views.py
+```
+
+
+## 2 Object Level validation
+about
+```text
+When we need to do validation that requires access to multiple files we
+do object level validation by adding a method called validate() to 
+Serializer subclass.
+
+It raises a serializers. ValidationError if necessary, or just return the 
+vaildated values.
+
+Syntax:- def validate(self, data)
+Example:- def validate(self, data)
+Where, data is dictionary of field values,
+```
+Example
+```python 
+from rest_framework import serializers
+class StudentSerializer(serializers.Serializer):
+    name = serializers.CharField(max_length = 100)
+    roll = serializers.IntegerField()
+    city  = serializers.CharField(max_length  = 100)
+    # data is in dictionary form 
+    def validate(self,data): #method that does object validation 
+        nm = data.get('name') # get the data using get method because it is in dictionary form 
+        ct = data.get('city')
+        if nm.lower() == 'rohit' and ct.lower() != 'ranchi': 
+            raise seralizers.ValidationError('City must be Ranchi')
+        return data
+```
+about the example program 
+```text
+A person named rohit must be of city ranchi
 ```
