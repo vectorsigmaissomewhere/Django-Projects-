@@ -539,3 +539,10 @@ class StudentAPI(View):
         # making code smaller
         return JsonResponse(res,safe=False)
 ```
+
+OUTPUT
+```text
+Here we are doing field level validation and object level validation
+field level validation for roll number and 
+object level validation for name and city
+```
