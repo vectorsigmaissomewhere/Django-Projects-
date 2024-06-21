@@ -576,7 +576,7 @@ instance.
 ```
 
 Example 
-```text
+```python
 from rest_framework import serializers
 def starts_with_r(value):
     if value['0'].lower() != 'r':
