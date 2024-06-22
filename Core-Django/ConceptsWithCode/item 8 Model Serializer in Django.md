@@ -253,3 +253,20 @@ class StudentSerializer(serializers.ModelSerializer):
     # using kwargs to make ready-only 
     extra_kwargs = {'name':{'read-only':True}}
 ```
+
+
+## 2 ModelSerializer Validation
+this example shows how you can use validation in Model Serializer
+serializer.py
+```python
+from rest_framework import serializers
+class StudentSerializer(serializers.ModelSerializer):
+    class Meta;
+        model = Student
+        fields = ['id','name','roll','city']
+    
+    def validate_roll(self,value):
+        if value >= 200:
+            raise serializers.ValidationError('Seat Full')
+       return value
+```
