@@ -258,7 +258,7 @@ class StudentSerializer(serializers.ModelSerializer):
 ## 2 ModelSerializer Validation
 this example shows how you can use validation in Model Serializer
 ```text
-In this example you name must start with r
+In this example you name must start your name with r
 and your roll number must be less than 200
 ```
 serializer.py
