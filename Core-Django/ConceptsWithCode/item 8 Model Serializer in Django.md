@@ -257,11 +257,19 @@ class StudentSerializer(serializers.ModelSerializer):
 
 ## 2 ModelSerializer Validation
 this example shows how you can use validation in Model Serializer
+```text
+In this example you name must start with r
+and your roll number must be less than 200
+```
 serializer.py
 ```python
 from rest_framework import serializers
 class StudentSerializer(serializers.ModelSerializer):
-    class Meta;
+    def start_with_r(value):
+        if value[0].lower() != 'r':
+            raise serializers.ValidationError('Name should be start with R')
+    name = serializers.CharField(validators=[start_with_r])
+    class Meta:
         model = Student
         fields = ['id','name','roll','city']
     
