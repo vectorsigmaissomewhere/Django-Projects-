@@ -3,7 +3,7 @@
 ```text
 item 1 : learned about api and request response and some http method
 item 2 : learned how to setup django rest framework
-item 3 : learned about serialization about convery complex python data types into json format
+item 3 : learned about serialization about converting complex python data types into json format
 item 4 : learned about serializer fields list
 item 5 : learned converting json data into complex python data types which is called deserialization
 item 6: implemented function based CRUD api and class based CRUD api
