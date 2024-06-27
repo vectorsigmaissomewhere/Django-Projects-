@@ -332,3 +332,177 @@ hit the below url in browser
 ```text
 http://127.0.0.1:8000/studentapi/
 ```
+
+2 Crud Using Function Based api_view
+
+impovement in the number of number of lines we used to write in gs7 has becomed less
+
+```text
+for get request
+when get_data(2)
+{'id': 2, 'name': 'Rahul', 'roll': 102, 'city': 'Ranchi'}
+
+when get_data()
+[{'id': 1, 'name': 'Sonam', 'roll': 101, 'city': 'Ranchi'}, {'id': 2, 'name': 'Rahul', 'roll': 102, 'city': 'Ranchi'}, {'id': 3, 'name': 'Raj', 'roll': 103, 'city': 'Bokaro'}]
+```
+
+function based api_view
+models.py
+```python
+from django.db import models
+
+# Create your models here.
+class Student(models.Model):
+    name = models.CharField(max_length=50)
+    roll = models.IntegerField()
+    city = models.CharField(max_length=50)
+```
+admin.py
+```python
+from django.contrib import admin
+from .models import Student
+# Register your models here.
+
+@admin.register(Student)
+class StudentAdmin(admin.ModelAdmin):
+    list_display = ['id','name','roll','city']
+```
+
+serializers.py
+```python
+from rest_framework import serializers
+from .models import Student
+
+class StudentSerializer(serializers.ModelSerializer):
+    class Meta:
+        model = Student
+        fields = ['id','name','roll','city']
+```
+views.py
+```python
+from django.shortcuts import render
+from rest_framework.decorators import api_view
+from rest_framework.response import Response
+from .models import Student
+from .serializers import StudentSerializer
+# Create your views here.
+
+@api_view(['GET','POST','PUT','DELETE'])
+def student_api(request):
+    if request.method == 'GET':
+        id = request.data.get('id') # getting directly parsed data
+        if id is not None:
+            stu = Student.objects.get(id = id)
+            serializer = StudentSerializer(stu)
+            return Response(serializer.data)
+        stu = Student.objects.all()
+        serializer = StudentSerializer(stu, many = True)
+        return Response(serializer.data)
+    
+    if request.method == 'POST':
+        serializer = StudentSerializer(data=request.data)
+        if serializer.is_valid():
+            serializer.save()
+            return Response({'msg':'Data Created'})
+        return Response(serializer.errors)
+    
+    if request.method == 'PUT':
+        id = request.data.get('id')
+        stu = Student.objects.get(pk=id)
+        serializer = StudentSerializer(stu, data=request.data,  partial = True)
+        if serializer.is_valid():
+            serializer.save()
+            return Response({'msg':'Data Updated'})
+        return Response(serializer.errors)
+    
+    if request.method == 'DELETE':
+        id = request.data.get('id')
+        stu = Student.objects.get(pk=id)
+        stu.delete()
+        return Response({'msg':'Data Deleted'})
+```
+
+urls.py
+```python
+from django.contrib import admin
+from django.urls import path
+from api import views
+
+urlpatterns = [
+    path('admin/', admin.site.urls),
+    path('studentapi/',views.student_api),
+]
+```
+myapp.py
+```python
+import requests
+import json
+
+URL = "http://127.0.0.1:8000/studentapi/"
+
+# this function will give you the data according to the id 
+def get_data(id=None):
+    data = {}
+    if id is not None:
+        data = {'id': id}
+    headers = {'content-Type':'application/json'}
+    r = requests.get(url=URL,headers=headers, json=data)
+    try:
+        r.raise_for_status() 
+        data = r.json()
+        print(data)
+    except requests.exceptions.HTTPError as err:
+        print(f"HTTP error occurred: {err}")
+    except requests.exceptions.RequestException as err:
+        print(f"Error occurred: {err}")
+    except ValueError:
+        print("Response content is not valid JSON")
+
+# get_data()
+
+# this function will send data to the server and save it into table 
+# this is in dictionary form 
+def post_data():
+    data = {
+        'name':'Sumit',
+        'roll':120,
+        'city':'Ranchi'
+    }
+    headers = {'content-Type':'application/json'}
+    # converting this into json form 
+    json_data = json.dumps(data)
+    r = requests.post(url = URL, headers=headers,data = json_data)
+    data = r.json()
+    print(data)
+
+# post_data()
+
+
+# this function will update the data with id
+# this is a partial updates as only required data is updated 
+def update_date():
+    data = {
+        'id': 4,
+        'name': 'Ranchi',
+        'roll': 112,
+        'city': 'Hunchi'
+    }
+    headers = {'content-Type':'application/json'}
+    json_data = json.dumps(data)
+    r = requests.put(url = URL, headers=headers, data = json_data)
+    data = r.json()
+    print(data)
+
+# update_date()
+
+# this function will delete the data based on id 
+def delete_data():
+    data = {'id':4}
+    headers = {'content-Type':'application/json'}
+    json_data = json.dumps(data)
+    r = requests.delete(url = URL, headers=headers, data = json_data)
+    data = r.json()
+    print(data)
+delete_data()
+```
+
