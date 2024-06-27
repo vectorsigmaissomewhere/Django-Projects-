@@ -681,3 +681,7 @@ def student_api(request,pk=None):
         return Response({'msg':'Data Deleted'})
 ```
 
+Conclusion
+```text
+Learned about browseable api and status code
+```
