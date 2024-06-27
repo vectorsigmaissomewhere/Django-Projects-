@@ -272,7 +272,8 @@ class StudentSerializer(serializers.ModelSerializer):
     class Meta:
         model = Student
         fields = ['id','name','roll','city']
-    
+
+    # field level validation
     def validate_roll(self,value):
         if value >= 200:
             raise serializers.ValidationError('Seat Full')
