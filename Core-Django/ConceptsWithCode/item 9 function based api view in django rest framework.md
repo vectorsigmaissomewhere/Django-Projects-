@@ -92,3 +92,238 @@ accepted renderer for the response.
 determined by content  negotiation, but there may be some cases where you need to specity the content type 
 explicitly. 
 ```
+# CODING PART
+
+1 Test your api using browseable api
+
+views.py
+```python
+from django.shortcuts import render
+from rest_framework.response import Response
+from rest_framework.decorators import api_view
+"""
+# Create your views here.
+@api_view() # if nothing is present here get is present like (['GET'])
+def hello_world(request):
+    return Response({'msg','Hello World'})
+"""
+"""
+# for post
+@api_view(['POST'])
+def hello_world(request):
+    if request.method == "POST":
+        print(request.data)
+        return Response({'msg':'This is POST Request'})
+"""
+# depends upon the request made
+@api_view(['GET','POST'])
+def hello_world(request):
+    if request.method == 'GET':
+        return Response({'msg':'This is GET Request'})
+    
+    if request.method == 'POST':
+        print(request.data)
+        return Response({'msg':'This is POST Request','data':request.data})
+```
+
+settings.py
+```python
+from pathlib import Path
+
+# Build paths inside the project like this: BASE_DIR / 'subdir'.
+BASE_DIR = Path(__file__).resolve().parent.parent
+
+
+# Quick-start development settings - unsuitable for production
+# See https://docs.djangoproject.com/en/5.0/howto/deployment/checklist/
+
+# SECURITY WARNING: keep the secret key used in production secret!
+SECRET_KEY = 'django-insecure-)-^qfjl11l-)m(ned*blopn-6hhk^08$_+3yf@)x!e^loflkla'
+
+# SECURITY WARNING: don't run with debug turned on in production!
+DEBUG = True
+
+ALLOWED_HOSTS = []
+
+
+# Application definition
+
+INSTALLED_APPS = [
+    'django.contrib.admin',
+    'django.contrib.auth',
+    'django.contrib.contenttypes',
+    'django.contrib.sessions',
+    'django.contrib.messages',
+    'django.contrib.staticfiles',
+    'rest_framework',
+    'api',
+]
+
+MIDDLEWARE = [
+    'django.middleware.security.SecurityMiddleware',
+    'django.contrib.sessions.middleware.SessionMiddleware',
+    'django.middleware.common.CommonMiddleware',
+    'django.middleware.csrf.CsrfViewMiddleware',
+    'django.contrib.auth.middleware.AuthenticationMiddleware',
+    'django.contrib.messages.middleware.MessageMiddleware',
+    'django.middleware.clickjacking.XFrameOptionsMiddleware',
+]
+
+ROOT_URLCONF = 'gs9.urls'
+
+TEMPLATES = [
+    {
+        'BACKEND': 'django.template.backends.django.DjangoTemplates',
+        'DIRS': [],
+        'APP_DIRS': True,
+        'OPTIONS': {
+            'context_processors': [
+                'django.template.context_processors.debug',
+                'django.template.context_processors.request',
+                'django.contrib.auth.context_processors.auth',
+                'django.contrib.messages.context_processors.messages',
+            ],
+        },
+    },
+]
+
+WSGI_APPLICATION = 'gs9.wsgi.application'
+
+
+# Database
+# https://docs.djangoproject.com/en/5.0/ref/settings/#databases
+
+DATABASES = {
+    'default': {
+        'ENGINE': 'django.db.backends.sqlite3',
+        'NAME': BASE_DIR / 'db.sqlite3',
+    }
+}
+
+
+# Password validation
+# https://docs.djangoproject.com/en/5.0/ref/settings/#auth-password-validators
+
+AUTH_PASSWORD_VALIDATORS = [
+    {
+        'NAME': 'django.contrib.auth.password_validation.UserAttributeSimilarityValidator',
+    },
+    {
+        'NAME': 'django.contrib.auth.password_validation.MinimumLengthValidator',
+    },
+    {
+        'NAME': 'django.contrib.auth.password_validation.CommonPasswordValidator',
+    },
+    {
+        'NAME': 'django.contrib.auth.password_validation.NumericPasswordValidator',
+    },
+]
+
+
+# Internationalization
+# https://docs.djangoproject.com/en/5.0/topics/i18n/
+
+LANGUAGE_CODE = 'en-us'
+
+TIME_ZONE = 'UTC'
+
+USE_I18N = True
+
+USE_TZ = True
+
+
+# Static files (CSS, JavaScript, Images)
+# https://docs.djangoproject.com/en/5.0/howto/static-files/
+
+STATIC_URL = 'static/'
+
+# Default primary key field type
+# https://docs.djangoproject.com/en/5.0/ref/settings/#default-auto-field
+
+DEFAULT_AUTO_FIELD = 'django.db.models.BigAutoField'
+```
+
+myapp.py
+```python
+import requests
+import json
+
+URL = "http://127.0.0.1:8000/studentapi/"
+
+# this function will give you the data according to the id 
+def get_data(id=None):
+    data = {}
+    if id is not None:
+        data = {'id': id}
+    headers = {'content-Type':'application/json'}
+    r = requests.get(url=URL,headers=headers, json=data)
+    try:
+        r.raise_for_status() 
+        data = r.json()
+        print(data)
+    except requests.exceptions.HTTPError as err:
+        print(f"HTTP error occurred: {err}")
+    except requests.exceptions.RequestException as err:
+        print(f"Error occurred: {err}")
+    except ValueError:
+        print("Response content is not valid JSON")
+
+get_data()
+
+# this function will send data to the server and save it into table 
+# this is in dictionary form 
+def post_data():
+    data = {
+        'name':'Rchecking1',
+        'roll':120,
+        'city':'Dhanchad'
+    }
+    headers = {'content-Type':'application/json'}
+    # converting this into json form 
+    json_data = json.dumps(data)
+    r = requests.post(url = URL, headers=headers,data = json_data)
+    data = r.json()
+    print(data)
+
+post_data()
+
+
+# this function will update the data with id
+# this is a partial updates as only required data is updated 
+def update_date():
+    data = {
+        'id': 9,
+        'name': 'Ramos',
+        'roll': 111,
+        'city': 'banchi'
+    }
+
+    json_data = json.dumps(data)
+    r = requests.put(url = URL, data = json_data)
+    data = r.json()
+    print(data)
+
+# update_date()
+
+# this function will delete the data based on id 
+def delete_data():
+    data = {'id':6}
+
+    json_data = json.dumps(data)
+    r = requests.delete(url = URL, data = json_data)
+    data = r.json()
+    print(data)
+#delete_data()
+```
+
+urls.py
+```python
+from django.contrib import admin
+from django.urls import path
+from api import views
+
+urlpatterns = [
+    path('admin/', admin.site.urls),
+    path('studentapi/', views.hello_world)
+]
+```
