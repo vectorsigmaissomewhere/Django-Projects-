@@ -327,3 +327,8 @@ urlpatterns = [
     path('studentapi/', views.hello_world)
 ]
 ```
+
+hit the below url in browser
+```text
+http://127.0.0.1:8000/studentapi/
+```
