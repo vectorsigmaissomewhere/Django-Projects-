@@ -683,5 +683,6 @@ def student_api(request,pk=None):
 
 Conclusion
 ```text
+Learned change the data using third party api
 Learned about browseable api and status code
 ```
