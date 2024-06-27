@@ -19,7 +19,7 @@ How to do this api_view
 ```text
 - for get request
 from rest_framework.decorators import api_view
-from rest)framework.response import Response
+from rest_framework.response import Response
 @api_view(['GET'])
 def student_list(request):
     if request.method == 'GET':
