@@ -220,3 +220,98 @@ class StudentDestory(DestroryModelMixin, GenericAPIView):
     def delete(self, request, *args, **kwargs):
         return self.destrory(request, *args, **kwargs)
 ```
+
+# 1 Coding Part using Generic API View And Model Mixin
+
+things to remember before looking to code
+```text
+Mixin is same as other way of creating and api which is present in jitem 11
+Generic API View and Model Mixin makes your code shorter in comparison to
+Class Based api view and function based api view
+
+also mixin provides a form to create data, update data etc.
+```
+
+which part of jitem11 you should work on to 
+```text
+work in views.py and urls.py only 
+```
+
+views.py
+```python
+# GenericAPIView and Model Mixin
+from .models import Student
+from .serializers import StudentSerializer
+from rest_framework.generics import GenericAPIView
+from rest_framework.mixins import ListModelMixin # list all the data
+from rest_framework.mixins import CreateModelMixin # used to making data
+from rest_framework.mixins import RetrieveModelMixin # used to retrived data accoding to id passed in url
+from rest_framework.mixins import UpdateModelMixin # updates the data
+from rest_framework.mixins import DestroyModelMixin # used to delete the data
+
+# used to get all the data
+class StudentList(GenericAPIView, ListModelMixin):
+    queryset = Student.objects.all() # getting all queryset
+    serializer_class = StudentSerializer
+    
+    # method that lists all the data from Student Model
+    def get(self, request, *args, **kwargs):
+        return self.list(request, *args, **kwargs) 
+
+# used in creating data
+class StudentCreate(GenericAPIView, CreateModelMixin):
+    queryset = Student.objects.all()
+    serializer_class = StudentSerializer
+
+    # method that helps in creating data 
+    def post(self, request, *args, **kwargs):
+        return self.create(request, *args, **kwargs)
+
+# retrieve data according to the url passed
+class StudentRetrive(GenericAPIView, RetrieveModelMixin):
+    queryset = Student.objects.all()
+    serializer_class = StudentSerializer
+
+    def get(self, request, * args, **kwargs):
+        return self.retrieve(request, *args, **kwargs)
+
+# use to update the data  
+class StudentUpdate(GenericAPIView, UpdateModelMixin):
+    queryset = Student.objects.all()
+    serializer_class = StudentSerializer
+    # this works for both put and patch 
+    def put(self, request, *args, **kwargs):
+        return self.update(request, *args, **kwargs)
+
+
+# use to delete the data
+class StudentDestroy(GenericAPIView, DestroyModelMixin):
+    queryset = Student.objects.all()
+    serializer_class = StudentSerializer
+
+    def delete(self, request, *args, **kwargs):
+        return self.destroy(request, *args, **kwargs)
+```
+
+urls.py
+```python
+from django.contrib import admin
+from django.urls import path
+from api import views
+
+urlpatterns = [
+    path('admin/', admin.site.urls),
+    path('studentapi/',views.StudentList.as_view()), # as it is class based api views # url for listing data
+    # path('studentapi/',views.StudentCreate.as_view()), # used for creating data
+    # path('studentapi/<int:pk>/',views.StudentRetrive.as_view()), # retrieving data
+    # path('studentapi/<int:pk>/',views.StudentUpdate.as_view())#use to update the data
+    path('studentapi/<int:pk>/', views.StudentDestroy.as_view())# use to delete the data
+    # path('studentapi/<int:pk>',views.StudentAPI.as_view()),
+]
+```
+
+keypoints
+```text
+you have to create a seperate url for each crud operation in this which is a problem
+this problem is solved in below program 
+```
