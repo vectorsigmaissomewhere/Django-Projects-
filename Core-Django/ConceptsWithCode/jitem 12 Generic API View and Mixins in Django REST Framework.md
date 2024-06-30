@@ -76,3 +76,147 @@ returing all data of a table at a time
 ```
 
 Mixins
+```text
+using class-based views allows us to easily compose reusable bits of behaviour.
+The create/retrieve/update/delete operations that we've been using so far are 
+going to be pretty similar for any model-backed API views we create.
+
+Those bits of common behaviour are implemented in REST framework's mixin classes.
+ The mixin classes provide the action methods rather than defining the handler
+methods, such as get() and post(), directly. This allows for more flexible 
+composition of behavior.
+
+The mixin classes can be imported from rest_framework.mixins
+
+List of mixin classes:
+1 - ListModelMixin
+2 - CreateModelMixin
+3 - RetrieveModelMixin
+4 - UpdateModelMixin
+5 - DestroyModelMixin
+```
+
+1 ListModelMixin
+```text
+It provides a list(request, *args, **kwargs) method, the implements listing a queryset.
+
+If the queryset is populated, this return a 200 OK response, with a serialized 
+representation of the queryset as the body of the response. The response data may 
+optionally be paginated.
+
+from rest_framework.mixins import ListModelMixin
+from rest_framework.generics import GenericAPIView
+```
+
+Example of ListModelMixin
+about
+```text
+write 4 lines and get all the data
+```
+```python
+from rest_framework.mixins import ListModelMixin
+from rest_framework.generics import GenericAPIView
+class StudentList(ListModelMixin, GenericAPIView):
+    queryset = Student.objects.all()
+    serializer_class = StudentSerializer
+    def get(self, request, *args, **kwargs):
+        return self.list(request, *args, **kwargs)	
+```
+
+2 CreateModelMixin
+```text
+It provides a create(request, *args, **kwargs) method, that implements creating and 
+saving a new model instance.
+
+If an object is created this returns a 201 Created response, with a serialized
+representation of the object as the body of the response. If the representation
+contains a key named url, then the Location header of the response will be
+ populated with the value. 
+
+If the request data provided for creating the objects was invalid, a 400 Bad Request
+response will be returned, with the error details as the body of the response.
+```
+
+Example of CreateModelMixin
+```python
+from rest_framework.mixins import CreateModelMixin
+from rest_framework.mixins import GenericAPIView
+class StudentCreate(CreateModelMixin, GenericAPIView):
+    queryset = Student.objects.all()
+    serializer_class = StudentSerializer
+    def post(self, request, *args, **kwargs):
+        return self.create(request, *args, **kwargs)
+```
+
+3 RetrieveModelMixin
+about
+```text
+It provides a retrieve(request, *args, **kwargs) method, the implements returning 
+and existing model instance in a response.
+
+If an object can be retrieved this returns a 200 OK response, with a serialized
+representation of the object as the body of the response. Otherwise it will return a 
+404 Not found.
+```
+
+Example of RetrieveModelMixin
+```python
+from rest_framework.mixins import RetrieveModelMixin
+from rest_framework.generics import GenericAPIView
+class StudentRetrieve(RetrieveModelMixin, GenericAPIView):
+    queryset = Student.objects.all()
+    serializer_class = StudentSerialier
+    def get(self, request, *args, **kwargs):
+        return self.retrieve(request, *args, **kwargs)
+```
+
+4 UpdateModelMixin
+
+about
+```text
+It provides a update(request, *args, **kwargs) method, that implements updating
+and saving an existing model instance.
+
+It also provides a partial_update(request, *args, **kwargs) method, which is similar
+to the update method, except that all fields for the update will be optional. This 
+allows support for HTTP PATCH requests.
+
+If an object is updated this returns a 200 OK response, with a serialized
+representation of the object as the body of the respone.
+
+If the request data provided for updating the object was invalid, a 400 Bad Request
+response will be returned, with the error details as the body of the reponse.
+```
+
+Example of UpdateModelMixin
+```python
+from rest_framework.mixins import UpdateModelMixin
+from rest_framework.generics import GenericAPIView
+
+class StudentUpdate(UpdateModelMixin, GenericAPIView):
+    queryset = Student.objects.all()
+    serializer_class = StudentSerializer
+    def put(self, request, *args, **kwargs):
+        return self.update(request, *args, **kwargs)
+```
+
+5 DestoryModelMixin
+about
+```text
+It provides a destroy(request, *args, **kwargs) method, that is implemented deletion of 
+an existing model instance.
+
+If an object is deleted this returns a 204 No Content response, otherwise it will
+return a 404 Not Found.
+```
+
+Example of DestroyModelMixin
+```python
+from rest_framework.mixins import DestroyModelMixin
+from rest_framework.generics import GenericAPIView
+class StudentDestory(DestroryModelMixin, GenericAPIView):
+    queryset = Student.objects.all()
+    serializer_class = StudentSerializer
+    def delete(self, request, *args, **kwargs):
+        return self.destrory(request, *args, **kwargs)
+```
