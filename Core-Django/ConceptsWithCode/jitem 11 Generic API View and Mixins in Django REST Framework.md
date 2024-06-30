@@ -315,3 +315,71 @@ keypoints
 you have to create a seperate url for each crud operation in this which is a problem
 this problem is solved in below program 
 ```
+
+# 2 Coding part , Solving the problem that we faced in 1 coding part
+```text
+We have faced a problem that is we have created a seperate url for each of the operation
+So, Now we are grouping the classes that We are creating 2 classes
+first Class to List and Create 
+second Class to retrieve, update and delete
+
+Reason for making a seperate group is that
+to List and Create, we don't need a id but,
+to retrieve, update and delete we need a id
+
+For the above code you just to edit the views.py and urls.py
+```
+
+views.py
+```python
+# GenericAPIView and Model Mixin
+from .models import Student
+from .serializers import StudentSerializer
+from rest_framework.generics import GenericAPIView
+from rest_framework.mixins import ListModelMixin # list all the data
+from rest_framework.mixins import CreateModelMixin # used to making data
+from rest_framework.mixins import RetrieveModelMixin # used to retrived data accoding to id passed in url
+from rest_framework.mixins import UpdateModelMixin # updates the data
+from rest_framework.mixins import DestroyModelMixin # used to delete the data
+
+# Here PK is not required
+class LCStudentAPI(GenericAPIView, ListModelMixin, CreateModelMixin):
+    queryset = Student.objects.all() # getting all queryset
+    serializer_class = StudentSerializer
+    
+    # method that lists all the data from Student Model
+    def get(self, request, *args, **kwargs):
+        return self.list(request, *args, **kwargs) 
+    
+    # method that helps in creating data 
+    def post(self, request, *args, **kwargs):
+        return self.create(request, *args, **kwargs)
+
+# Here PK is required
+class RUDStudentAPI(GenericAPIView, RetrieveModelMixin, UpdateModelMixin, DestroyModelMixin):
+    queryset = Student.objects.all()
+    serializer_class = StudentSerializer
+
+    def get(self, request, * args, **kwargs):
+        return self.retrieve(request, *args, **kwargs)
+    
+    # this works for both put and patch 
+    def put(self, request, *args, **kwargs):
+        return self.update(request, *args, **kwargs)
+    
+    def delete(self, request, *args, **kwargs):
+        return self.destroy(request, *args, **kwargs)
+```
+
+urls.py
+```python
+from django.contrib import admin
+from django.urls import path
+from api import views
+
+urlpatterns = [
+    path('admin/', admin.site.urls),
+    path('studentapi/', views.LCStudentAPI.as_view()), # list and create 
+    path('studentapi/<int:pk>/', views.RUDStudentAPI.as_view()), # single retrieve , edit , delete
+]
+```
