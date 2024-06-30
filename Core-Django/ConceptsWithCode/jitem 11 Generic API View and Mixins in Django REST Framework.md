@@ -225,14 +225,14 @@ class StudentDestory(DestroryModelMixin, GenericAPIView):
 
 things to remember before looking to code
 ```text
-Mixin is same as other way of creating and api which is present in jitem 11
+Mixin is same as other way of creating and api which is present in jitem 10
 Generic API View and Model Mixin makes your code shorter in comparison to
 Class Based api view and function based api view
 
 also mixin provides a form to create data, update data etc.
 ```
 
-which part of jitem11 you should work on to 
+which part of jitem10 you should work on to 
 ```text
 work in views.py and urls.py only 
 ```
