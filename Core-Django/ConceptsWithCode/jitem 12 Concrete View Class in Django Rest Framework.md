@@ -1,7 +1,7 @@
 ## Concrete View Class
 about
 ```text
-Every kind of implementation has been made
+Every kind of implementation has been made already
 we just have to use it 
 ```
 
