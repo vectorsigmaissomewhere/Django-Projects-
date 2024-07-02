@@ -154,3 +154,95 @@ class StudentRetrieveUpdateDestroy(RetrieveUpdateDestroyAPIView):
     queryset = Student.objects.all()
     serializer_class = StudentSerializer
 ```
+
+
+## Coding Part 
+about
+```text
+you need to make edit to views.py and urls.py only from jite11 file
+```
+
+views.py
+```python
+from .models import Student
+from .serializers import StudentSerializer
+from rest_framework.generics import ListAPIView # used for getting data
+from rest_framework.generics import CreateAPIView # used for creating post
+from rest_framework.generics import RetrieveAPIView # used for getting data according to id
+from rest_framework.generics import UpdateAPIView # used to updating data according to id 
+from rest_framework.generics import DestroyAPIView # used to delete data according to id
+from rest_framework.generics import ListCreateAPIView # used for getting dara and creating data
+from rest_framework.generics import RetrieveUpdateAPIView # used to getting data according to id and updating data according to id
+from rest_framework.generics import RetrieveDestroyAPIView # used to getting data according to id and deleting data according to id
+from rest_framework.generics import RetrieveUpdateDestroyAPIView # used to retrieve, update and destroy
+
+class StudentList(ListAPIView):
+    queryset = Student.objects.all()
+    serializer_class = StudentSerializer
+
+class StudentCreate(CreateAPIView):
+    queryset = Student.objects.all()
+    serializer_class = StudentSerializer
+
+class StudentRetrieve(RetrieveAPIView):
+    queryset = Student.objects.all()
+    serializer_class = StudentSerializer
+
+class StudentUpdate(UpdateAPIView):
+    queryset = Student.objects.all()
+    serializer_class = StudentSerializer
+
+class StudentDestroy(DestroyAPIView):
+    queryset = Student.objects.all()
+    serializer_class = StudentSerializer
+
+
+# combined operation for ListAPIView and CreateAPIView
+class StudentListCreate(ListCreateAPIView):
+    queryset = Student.objects.all()
+    serializer_class = StudentSerializer
+
+# combined operation for RetrieveAPIView and UpdateAPIView
+class StudentRetrieveUpdate(RetrieveUpdateAPIView):
+    queryset = Student.objects.all()
+    serializer_class = StudentSerializer
+
+# combined operation for RetrieveAPIView and DestroyAPIView
+class StudentRetrieveDestroy(RetrieveDestroyAPIView):
+    queryset = Student.objects.all()
+    serializer_class = StudentSerializer
+
+# combined operation for retrieve, update and destroy
+class StudentRetrieveUpdateDestroy(RetrieveUpdateDestroyAPIView):
+    queryset = Student.objects.all()
+    serializer_class= StudentSerializer
+```
+
+urls.py
+```python
+from django.contrib import admin
+from django.urls import path
+from api import views
+
+urlpatterns = [
+    path('admin/', admin.site.urls),
+    # path('studentapi/', views.StudentList.as_view()), # url for views 
+    # path('studentapi/', views.StudentCreate.as_view()), # url to make post
+    # path('studentapi/<int:pk>/', views.StudentRetrieve.as_view()), # url for getting data
+    # path('studentapi/<int:pk>/', views.StudentUpdate.as_view()), # used for updating data
+    # path('studentapi/<int:pk>/',views.StudentDestroy.as_view()), # used to deleting data
+    path('studentapi/', views.StudentListCreate.as_view()), # used for list and create data
+    # path('studentapi/<int:pk>/', views.StudentRetrieveUpdate.as_view()), # used for retrieving and updating data
+    # path('studentapi/<int:pk>/',views.StudentRetrieveDestroy.as_view()), # used to retrieving and deleting data
+    path('studentapi/<int:pk>/', views.StudentRetrieveUpdateDestroy.as_view()) # used to retrieving, updating and deleting data
+] 
+```
+
+Problem with the above group
+```text
+In the above code we have made a jungle of urls
+so we are only using 2 combined classes one
+1 ListCreateAPIView
+2 RetrieveUpdateDestroyAPIView
+```
+
