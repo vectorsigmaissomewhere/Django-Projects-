@@ -277,4 +277,4 @@ urlpatterns = [
     path('studentapi/', views.StudentListCreate.as_view()), # used for list and create data
     path('studentapi/<int:pk>/', views.StudentRetrieveUpdateDestroy.as_view()) # used to retrieving, updating and deleting data
 ] 
-``
+```
