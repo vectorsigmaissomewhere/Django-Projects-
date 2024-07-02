@@ -238,7 +238,7 @@ urlpatterns = [
 ] 
 ```
 
-Problem with the above group
+Problem with the above code
 ```text
 In the above code we have made a jungle of urls
 so we are only using 2 combined classes one
@@ -246,3 +246,35 @@ so we are only using 2 combined classes one
 2 RetrieveUpdateDestroyAPIView
 ```
 
+## 2 Solution of the above code
+
+views.py
+```python
+from .models import Student
+from .serializers import StudentSerializer
+from rest_framework.generics import ListCreateAPIView # used for getting dara and creating data
+from rest_framework.generics import RetrieveUpdateDestroyAPIView # used to retrieve, update and destroy
+
+# combined operation for ListAPIView and CreateAPIView
+class StudentListCreate(ListCreateAPIView):
+    queryset = Student.objects.all()
+    serializer_class = StudentSerializer
+
+# combined operation for retrieve, update and destroy
+class StudentRetrieveUpdateDestroy(RetrieveUpdateDestroyAPIView):
+    queryset = Student.objects.all()
+    serializer_class= StudentSerializer
+```
+
+urls.py
+```python
+from django.contrib import admin
+from django.urls import path
+from api import views
+
+urlpatterns = [
+    path('admin/', admin.site.urls),
+    path('studentapi/', views.StudentListCreate.as_view()), # used for list and create data
+    path('studentapi/<int:pk>/', views.StudentRetrieveUpdateDestroy.as_view()) # used to retrieving, updating and deleting data
+] 
+``
