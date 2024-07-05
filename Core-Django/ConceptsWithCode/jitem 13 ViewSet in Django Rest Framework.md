@@ -136,7 +136,21 @@ urlpatterns = [
     path('', include(router.urls)),
 ]
 ```
-
+Also, If you want to get more information of the view request use the below code in every method
+```python
+class StudentViewSet(viewsets.ViewSet):
+    def list(self,request):
+        print("*********Retrieve************")
+        print("Basename:", self.basename)
+        print("Action:", self.action)
+        print("Detail:", self.detail)
+        print("Suffix:", self.suffix)
+        print("Name:", self.name)
+        print("Description:", self.description)
+        stu = Student.objects.all()
+        serializer = StudentSerializer(stu, many = True)
+        return Response(serializer.data)
+```
 ## What is different here
 ```text
 Use of routers
