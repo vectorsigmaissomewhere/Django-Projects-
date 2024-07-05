@@ -2,4 +2,7 @@
 
 You know the book right check it
 
-In this section only templates are used, that is html and css, So the directory name is Basics 
+About the directory
+```text
+Basic: only templates are used that is html and css
+```
