@@ -61,3 +61,95 @@ urlpatterns = [
     path('', include(router.urls)), # The API URLS are now determined automatically by the router
 ]
 ```
+
+## CODING PART
+views.py
+```python
+from django.shortcuts import render
+from rest_framework.response import Response
+from .models import Student
+from .serializers import StudentSerializer
+from rest_framework import status
+from rest_framework import viewsets
+
+
+class StudentViewSet(viewsets.ViewSet):
+    def list(self,request):
+        stu = Student.objects.all()
+        serializer = StudentSerializer(stu, many = True)
+        return Response(serializer.data)
+    
+    def retrieve(self, request, pk=None):
+        id = pk
+        if id is not None:
+            stu = Student.objects.get(id = id)
+            serializer = StudentSerializer(stu)
+            return Response(serializer.data)
+    
+    def create(self, request):
+        serializer = StudentSerializer(data=request.data)
+        if serializer.is_valid():
+            serializer.save()
+            return Response({'msg':'Data Created'}, status = status.HTTP_201_CREATED)
+        return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
+    
+    def update(self, request, pk):
+        id = pk 
+        stu = Student.objects.get(pk = id)
+        serializer = StudentSerializer(stu, data = request.data)
+        if serializer.is_valid():
+            serializer.save()
+            return Response({'msg':'Complete Data Updated'})
+        return Response(serializer.errors, status = status.HTTP_400_BAD_REQUEST)
+    
+    def partial_update(self, request, pk):
+        id = pk
+        stu = Student.objects.get(pk = id)
+        serializer = StudentSerializer(stu, data=request.data, partial = True)
+        if serializer.is_valid():
+            serializer.save()
+            return Response({'msg':'Partial Data Updateed'})
+        return Response(serializer.errors)
+    
+    def destroy(self, request, pk):
+        id = pk
+        stu = Student.objects.get(pk = id)
+        stu.delete()
+        return Response({'msg':'Data Deleted'})
+```
+
+urls.py
+```python
+from django.contrib import admin
+from django.urls import path, include
+from api import views
+from rest_framework.routers import DefaultRouter
+
+# Creating Router Object
+router = DefaultRouter() 
+
+# Register StudentViewSet With Router
+router.register('studentapi', views.StudentViewSet, basename='student')
+
+urlpatterns = [
+    path('admin/', admin.site.urls),
+    path('', include(router.urls)),
+]
+```
+
+## What is different here
+```text
+Use of routers
+Why routers?
+Before we had jungles of urls, means lots of lots
+what router does is, it help us to create less urls
+In our code we only have one url that is ''
+Also you don't have to create a seperate paramter in url for other methods
+```
+
+Conlusion
+```text
+the code in this section is same as jitem12
+and here we made changes in views.py and urls .py only
+Used routers as it made the url less in compared to jitem 12
+```
