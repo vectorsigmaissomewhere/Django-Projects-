@@ -141,9 +141,9 @@ urlpatterns = [
 ```text
 Use of routers
 Why routers?
-Before we had jungles of urls, means lots of lots
+Before we had jungles of urls, means lots of urls
 what router does is, it help us to create less urls
-In our code we only have one url that is ''
+In this code we only have one url that is ''
 Also you don't have to create a seperate paramter in url for other methods
 ```
 
