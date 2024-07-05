@@ -65,6 +65,10 @@ and then click on create
 Now what we need is a client ID and a client secret key
 you can even download the json file
 ```
-
+Note
+```text
+You don't need to remember these as you will get used to it
+but as you are doing it for the first time do check a blog 
+```
 
 ## Coding part
