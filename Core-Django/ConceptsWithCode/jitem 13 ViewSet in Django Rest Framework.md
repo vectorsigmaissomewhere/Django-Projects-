@@ -167,3 +167,8 @@ the code in this section is same as jitem12
 and here we made changes in views.py and urls .py only
 Used routers as it made the url less in compared to jitem 12
 ```
+
+find the full code from 
+```
+jitem 9 or jitem 10
+```
