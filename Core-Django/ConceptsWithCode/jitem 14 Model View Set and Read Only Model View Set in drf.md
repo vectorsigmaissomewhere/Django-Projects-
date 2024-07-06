@@ -113,3 +113,8 @@ You have to make changes in urls.py and views.py only in both of the examples an
 
 check full code from gs18 or gs19
 ```
+
+find the rest of the  code from 
+```
+jitem 9 or jitem 10
+```
