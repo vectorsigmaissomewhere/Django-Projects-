@@ -280,7 +280,7 @@ urlpatterns = [
 ```
 
 
-find the full code from 
+find the rest of the code from 
 ```
 jitem 9 or jitem 10
 ```
