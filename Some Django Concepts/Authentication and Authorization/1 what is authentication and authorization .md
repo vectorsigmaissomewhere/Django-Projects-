@@ -19,7 +19,7 @@ Setting Authentication
 
 ## Authentication and Authorization
 ```text
-Authentication - Authentication is about validating your credentialis 
+Authentication - Authentication is about validating your credentials
 like Username and password to verify your identity.
 Authorization - Authorization is the process to determine whether 
 the authenticated user has access to particular resources.
