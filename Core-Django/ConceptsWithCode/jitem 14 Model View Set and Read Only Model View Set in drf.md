@@ -22,8 +22,6 @@ class StudentViewSet(viewsets.ModelViewSet):
 ```
 
 here too we are using routers for url
-only work with view
-
 
 ## ModelViewSet Class Coding 
 urls.py
