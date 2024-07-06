@@ -278,3 +278,9 @@ urlpatterns = [
     path('studentapi/<int:pk>/', views.StudentRetrieveUpdateDestroy.as_view()) # used to retrieving, updating and deleting data
 ] 
 ```
+
+
+find the full code from 
+```
+jitem 9 or jitem 10
+```
