@@ -383,3 +383,8 @@ urlpatterns = [
     path('studentapi/<int:pk>/', views.RUDStudentAPI.as_view()), # single retrieve , edit , delete
 ]
 ```
+
+find the full code from 
+```
+jitem 9 or jitem 10
+```
