@@ -118,3 +118,217 @@ codename: 100 characters or fewer, Example, can_vote
 ```
 
 ## Coding Part
+
+settings.py
+```python
+from pathlib import Path
+
+# Build paths inside the project like this: BASE_DIR / 'subdir'.
+BASE_DIR = Path(__file__).resolve().parent.parent
+
+
+# Quick-start development settings - unsuitable for production
+# See https://docs.djangoproject.com/en/5.0/howto/deployment/checklist/
+
+# SECURITY WARNING: keep the secret key used in production secret!
+SECRET_KEY = 'django-insecure-!e4!u719+_($u7(gxt9o&2z5$b+#6^mb*n2(!p@51sj@=hz8xu'
+
+# SECURITY WARNING: don't run with debug turned on in production!
+DEBUG = True
+
+ALLOWED_HOSTS = []
+
+
+# Application definition
+
+INSTALLED_APPS = [
+    'django.contrib.admin',
+    'django.contrib.auth',
+    'django.contrib.contenttypes',
+    'django.contrib.sessions',
+    'django.contrib.messages',
+    'django.contrib.staticfiles',
+    'enroll',
+]
+
+MIDDLEWARE = [
+    'django.middleware.security.SecurityMiddleware',
+    'django.contrib.sessions.middleware.SessionMiddleware',
+    'django.middleware.common.CommonMiddleware',
+    'django.middleware.csrf.CsrfViewMiddleware',
+    'django.contrib.auth.middleware.AuthenticationMiddleware',
+    'django.contrib.messages.middleware.MessageMiddleware',
+    'django.middleware.clickjacking.XFrameOptionsMiddleware',
+]
+
+ROOT_URLCONF = 'authenticationusercreationform.urls'
+
+TEMPLATES = [
+    {
+        'BACKEND': 'django.template.backends.django.DjangoTemplates',
+        'DIRS': [],
+        'APP_DIRS': True,
+        'OPTIONS': {
+            'context_processors': [
+                'django.template.context_processors.debug',
+                'django.template.context_processors.request',
+                'django.contrib.auth.context_processors.auth',
+                'django.contrib.messages.context_processors.messages',
+            ],
+        },
+    },
+]
+
+WSGI_APPLICATION = 'authenticationusercreationform.wsgi.application'
+
+
+# Database
+# https://docs.djangoproject.com/en/5.0/ref/settings/#databases
+
+DATABASES = {
+    'default': {
+        'ENGINE': 'django.db.backends.sqlite3',
+        'NAME': BASE_DIR / 'db.sqlite3',
+    }
+}
+
+
+# Password validation
+# https://docs.djangoproject.com/en/5.0/ref/settings/#auth-password-validators
+
+AUTH_PASSWORD_VALIDATORS = [
+    {
+        'NAME': 'django.contrib.auth.password_validation.UserAttributeSimilarityValidator',
+    },
+    {
+        'NAME': 'django.contrib.auth.password_validation.MinimumLengthValidator',
+    },
+    {
+        'NAME': 'django.contrib.auth.password_validation.CommonPasswordValidator',
+    },
+    {
+        'NAME': 'django.contrib.auth.password_validation.NumericPasswordValidator',
+    },
+]
+
+
+# Internationalization
+# https://docs.djangoproject.com/en/5.0/topics/i18n/
+
+LANGUAGE_CODE = 'en-us'
+
+TIME_ZONE = 'UTC'
+
+USE_I18N = True
+
+USE_TZ = True
+
+
+# Static files (CSS, JavaScript, Images)
+# https://docs.djangoproject.com/en/5.0/howto/static-files/
+
+STATIC_URL = 'static/'
+
+# Default primary key field type
+# https://docs.djangoproject.com/en/5.0/ref/settings/#default-auto-field
+
+DEFAULT_AUTO_FIELD = 'django.db.models.BigAutoField'
+```
+
+views.py
+```python
+from django.shortcuts import render,redirect
+# from django.contrib.auth.forms import UserCreationForm # using UserCreationForm
+# using my form withh more fields
+from .forms import SignUpForm
+from django.contrib import messages
+
+# use this function view if you need only username and password
+"""
+def sign_up(request):
+    if request.method == "POST":
+        fm = UserCreationForm(request.POST)
+        if fm.is_valid():
+            fm.save()
+    else:
+        fm = UserCreationForm() # a blank form object
+    return render(request, 'enroll/signup.html',{'form':fm}) # rendering the fm template in signup.html
+"""
+
+# use this function view if you want to use your forms 
+def sign_up(request):
+    if request.method == "POST":
+        fm = SignUpForm(request.POST)
+        if fm.is_valid():
+            messages.success(request,"Account created successfully !!")
+            fm.save()
+            redirect('/signup/')
+    else:
+        fm = SignUpForm() # a blank form object
+    return render(request, 'enroll/signup.html',{'form':fm}) # rendering the fm template in signup.html
+```
+
+forms.py
+```python
+# why to create forms.py because we need other fields like first name last name and email
+
+from django.contrib.auth.models import User
+from django.contrib.auth.forms import UserCreationForm
+from django import forms
+
+# extending the form 
+class SignUpForm(UserCreationForm):
+    # customize UserCreationForm label in this place
+    # there are password1 and password2 in UserCreationForm 
+    # Changing label of password2 
+    password2 = forms.CharField(label='Confirm Password (again)', widget=forms.PasswordInput)
+    class Meta:
+        model = User
+        fields = ['username','first_name','last_name','email']
+        labels = {'email': 'Email'} # changing the label name 
+```
+
+signup.html
+```html
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>User Registration</title>
+</head>
+<style>
+    .success{
+        color: red;
+    }
+</style>
+<body>
+    <form action="" method="POST" novalidate>
+        {% csrf_token %}
+        {% for fm in form %}
+        {{ fm.label_tag }} {{ fm }} {{ fm.errors|striptags }}<br><br>
+        {% endfor %}
+        <input type="submit" value="submit">
+    </form>
+    {% if messages %}
+    {% for message in messages %}
+    <small {% if message.tags %} class="{{ message.tags }}" {% endif %}>{{ message }}</small>
+    {% endfor %}
+    {% endif %}
+</body>
+</html>
+```
+
+urls.py
+```python
+from django.contrib import admin
+from django.urls import path
+from enroll import views
+
+urlpatterns = [
+    path('admin/', admin.site.urls),
+    path('signup/', views.sign_up),
+]
+```
+
+
