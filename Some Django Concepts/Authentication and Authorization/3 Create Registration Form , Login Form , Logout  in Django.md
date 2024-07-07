@@ -169,7 +169,7 @@ completely cleaned out. All existing data is removed. This is to prevent another
  user's session data.
 ```
 
-## Coding Part
+## 1 Using this program you can authenicate user, logout user and also change the password without old password or with old password
 
 settings.py
 ```python
@@ -295,7 +295,10 @@ from django.shortcuts import render,redirect, HttpResponseRedirect
 from .forms import SignUpForm
 from django.contrib import messages
 from django.contrib.auth.forms import AuthenticationForm
-from django.contrib.auth import authenticate,login,logout
+from django.contrib.auth.forms import PasswordChangeForm # pre-build form to change password with old password
+from django.contrib.auth.forms import SetPasswordForm # password change form to change password without old password
+from django.contrib.auth import authenticate,login,logout, update_session_auth_hash # maintains session 
+
 
 # use this function view if you need only username and password
 """
@@ -354,6 +357,40 @@ def user_profile(request):
 def user_logout(request):
     logout(request)
     return HttpResponseRedirect('/login/')
+
+# views to change password with old password 
+def user_change_pass(request):
+    # I don't want to see the change password template when user is logged out
+    if request.user.is_authenticated:
+        if request.method == "POST":
+            fm = PasswordChangeForm(user=request.user,data=request.POST)
+            if fm.is_valid():
+                fm.save()
+                update_session_auth_hash(request, fm.user) # session is not maintained and it is logging out so using this function
+                messages.success(request,'Password Changed Successfully')
+                return HttpResponseRedirect('/profile/')    
+        else:
+            fm = PasswordChangeForm(user=request.user)
+        return render(request, 'enroll/changepass.html', {'form': fm})
+    else:
+        return HttpResponseRedirect('/login/')
+
+# change password without old password
+def user_change_pass1(request):
+    # I don't want to see the change password template when user is logged out
+    if request.user.is_authenticated:
+        if request.method == "POST":
+            fm = SetPasswordForm(user=request.user,data=request.POST)
+            if fm.is_valid():
+                fm.save()
+                update_session_auth_hash(request, fm.user) # session is not maintained and it is logging out so using this function
+                messages.success(request,'Password Changed Successfully')
+                return HttpResponseRedirect('/profile/')    
+        else:
+            fm = SetPasswordForm(user=request.user)
+        return render(request, 'enroll/changepass1.html', {'form': fm})
+    else:
+        return HttpResponseRedirect('/login/')
 ```
 
 forms.py
@@ -460,7 +497,9 @@ profile.html
     {% for message in messages %}
     <small {% if message.tags %} class="{{ message.tags }}" {% endif %}>{{ message }}</small>
     {% endfor %}
-    {% endif %}
+    {% endif %
+    <a href="{% url 'changepass' %}">Change Password with old password</a><br> <!--Change password with old password-->
+    <a href="{% url 'changepass1' %}">Change Password without old password</a> <!--Change password without old password-->
     <a href="{% url 'logout' %}">Logout</a>
 </body>
 </html>
@@ -477,9 +516,71 @@ urlpatterns = [
     path('signup/', views.sign_up,name='signup'), # the third url means when other url wants to open the signup it need signup
     path('login/',views.user_login,name='login'),
     path('profile/',views.user_profile, name='profile'),
-    path('/logout/',views.user_logout, name='logout'),
+    path('logout/',views.user_logout, name='logout'),
+    path('changepass/', views.user_change_pass, name='changepass'), # link to change password with old password
+    path('changepass1/', views.user_change_pass1, name='changepass1') # link to change password without old password
 ]
-
 ```
 
+changepass.html
+```html
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Change Password</title>
+</head>
+<body>
+    <h1>Change Password with old password</h1>
+    <!--novalidate lauda tyo khali jada fill garr vnne message dekhaudaina-->
+    <form action="" method="POST" novalidate>
+        {% csrf_token %}
+        {% csrf_token %}
+        {% if form.non_field_errors %}
+        {% for error in form.non_field_errors %}
+        <p class="er">{{ error }}</p>
+        {% endfor %}
+        {% endif %}
+        {% for fm in form %}
+        {{ fm.label_tag }} {{ fm }} {{ fm.errors|striptags }}<br><br>
+        {% endfor %}
+        <input type="submit" value="Save">
+    </form>
+    <a href="{% url 'profile' %}">Profile</a>
+    <a href="{% url 'logout' %}">Logout</a>
+</body>
+</html>
+```
+
+changepass1.html
+```html
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Change Password</title>
+</head>
+<body>
+    <h1>Change password without old password</h1>
+    <!--novalidate lauda tyo khali jada fill garr vnne message dekhaudaina-->
+    <form action="" method="POST" novalidate>
+        {% csrf_token %}
+        {% csrf_token %}
+        {% if form.non_field_errors %}
+        {% for error in form.non_field_errors %}
+        <p class="er">{{ error }}</p>
+        {% endfor %}
+        {% endif %}
+        {% for fm in form %}
+        {{ fm.label_tag }} {{ fm }} {{ fm.errors|striptags }}<br><br>
+        {% endfor %}
+        <input type="submit" value="Save">
+    </form>
+    <a href="{% url 'profile' %}">Profile</a>
+    <a href="{% url 'logout' %}">Logout</a>
+</body>
+</html>
+```
 
