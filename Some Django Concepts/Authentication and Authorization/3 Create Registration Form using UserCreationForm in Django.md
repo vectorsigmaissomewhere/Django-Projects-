@@ -122,6 +122,7 @@ name - It is required and length is 255 characters or fewer, Example: Can vote
 content_type: 
 codename: 100 characters or fewer, Example, can_vote
 ```
+## Login
 
 Function that you need to before doing login
 authenticate() 
