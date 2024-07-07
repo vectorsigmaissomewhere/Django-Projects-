@@ -1,5 +1,11 @@
 ## Create Registration Form using UserCreationForm in Django
 
+What to expect in this file
+```text
+use UserCreationForm , extend UserCreationForm and make custom form
+AuthenticationForm to register, login, logout
+```
+
 User Authentication System
 ```text
 Django comes with a user authentication system.
@@ -115,6 +121,51 @@ Permission Object FIleds
 name - It is required and length is 255 characters or fewer, Example: Can vote
 content_type: 
 codename: 100 characters or fewer, Example, can_vote
+```
+
+Function that you need to before doing login
+authenticate() 
+```text
+authenticate(request = None, ** credentials) - verify credentials, 
+It takes credentials as keywork arguments, username and password
+ for the default case, checks them against each authentication 
+backend, and returns a User object if the credentials are valid 
+for a backend. 
+
+If the credentials aren't valid for any backend or if a backend raises 
+PermissionDenied, it returns None.
+
+request is an optional HttpRequest which is passed on the authenticate()
+method of the authentication backends.
+Example:- 
+user = authenticate(username ='ronaldo', password = 'lisbon')
+
+After it is authenticated and we give them to login()
+```
+
+login()
+```text
+login(request, user, backend = None) - To log a user in, from a view, use login(). 
+It takes an HttpRequest object and a User object login() saves the 
+user's ID in the session, using Django's session framework.
+
+When a user logs in, the user's ID and the backend that was used for 
+authentication are saved in the user's session. This allows the same 
+authentication backend to fetch the user's details on a future request.
+```
+
+We will use AuthenticationForm  in login form 
+
+logout()
+```text
+logout(request) - To log out a user who has been logged in via 
+django.contrib.auth.login(), use django.contrib.auth.logout() within your
+view. It takes an HttpRequest object and has no return value.
+
+When you call logout(), the session data for the current request is 
+completely cleaned out. All existing data is removed. This is to prevent another
+ person from using the same Web browser to log in and have access to the previous
+ user's session data.
 ```
 
 ## Coding Part
