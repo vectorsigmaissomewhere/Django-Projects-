@@ -46,4 +46,72 @@ credentials.
 Unauthenticated response that are denied permissio will result in an
 HTTP-401 Unauthorized response with an appropriate 
 WWW-Authenticate Reader. For example:
+WWW- Authenticate: Basic realm = "api"
+```
+
+Note
+```text
+If you use BasicAuthentication in production you must ensure that your 
+API is only available over https.
+You should also ensure that you API clients will alway re-request the 
+username and password at login, and will never store those
+details to persistent storage.
+```
+
+Permission
+```text
+Permissions are used to grant or deny access for different classes of 
+users to different parts of the API.
+Permission checks are always run at the very start of the view, before
+any other code is allowed to proceed.
+Permission checks will typically use the authentication information in 
+the request.user and request.auth properties to determine if the 
+incoming request should be permitted.
+```
+
+Permission Classes
+```text
+Permissions in REST framework are always defined as a list of permission
+classes.
+- AllowAny
+- IsAuthenticated
+- IsAdminUser
+- IsAuthenticatedOrReadOnly
+- DjangoModelPermissions
+- DjangoModelPermissionsOrAnonReadOnly
+- DjangoObjectPermissions
+- Custom Permissions
+```
+
+AllowAny 
+```text
+The AllowAny permission class will allow unrestricted access,
+regardless of if the request was authenticated or unauthenticated.
+
+using this give permission to anyone in api
+
+This permission is only strictly requied, since you can achieve the same
+result by using an empty list or typle for the permissions setting, but
+you may find it useful to specify this class because it makes the 
+intention explict.
+```
+
+IsAuthenticated
+```text
+The IsAuthenticated permission class will deny permission to any 
+unauthenticated user, allow permission otherwise.
+
+This permission is suitable if you want your API to only be accessible
+to registerd users.
+```
+
+IsAdminUser
+```text
+The IsAdminUser permission class will deny permission to any user, 
+unless user.is_staff is True in which case permission will be allowed.
+This permission is suitable if you want your API to only be accessible
+to a subset of trusted administrators.
+
+means to say if the user is not staff the user will not be able to use 
+the api
 ```
