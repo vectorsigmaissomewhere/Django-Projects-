@@ -115,7 +115,7 @@ assigned.
 - PUT and PATCH and DELETE same thing goes like the POST
 ```
 
-CODING PART TO KNOW MORE ABOUT PERMISSION Like Model object permission and how anonymous user can read even read
+## CODING PART TO KNOW MORE ABOUT PERMISSION Like Model object permission and how anonymous user can read even read
 
 urls.py
 ```python
