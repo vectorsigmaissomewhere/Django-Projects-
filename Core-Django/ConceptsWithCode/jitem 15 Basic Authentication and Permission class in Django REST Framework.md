@@ -115,3 +115,120 @@ to a subset of trusted administrators.
 means to say if the user is not staff the user will not be able to use 
 the api
 ```
+
+About the user and project
+```
+used gs18 code in gs20 myapp
+
+three user
+admin (staff)
+superuser (admin)
+
+user: normaluser staff admin
+
+normaluser 
+Even unauthenticated user can view the data 
+
+Now we will add a feature where only authenticated user can do CRUD 
+operation
+```
+Note
+```text
+we will write the authentication code in views.py obviously 
+and we are working in views.py only
+
+The concept here is only the user which staff status is true can 
+login in the application
+
+Reason to give authentication globally is because if there are large 
+number of views we can't put authentication in each of the classes
+check settings.py
+```
+
+Here we learned three concepts that is
+```text
+BasicAuthentication, IsAuthenticated and AllowAny
+```
+
+
+ ## Coding Part
+About the program 
+```text
+Program showing is_staff user can only acess the data and not by
+other normal user also the user must authenticate to view or make
+changes in the data 
+
+Get code in gs20
+
+we are working in settings.py, urls, py and views.py in this section
+other part is similar to gs18 because we have used router from that part
+```
+
+urls.py
+```python
+from django.contrib import admin
+from django.urls import path, include
+from api import views
+from rest_framework.routers import DefaultRouter
+
+# Creating Router Object
+router = DefaultRouter() 
+
+# Register StudentViewSet With Router
+router.register('studentapi', views.StudentModelViewSet, basename='student')
+
+urlpatterns = [
+    path('admin/', admin.site.urls),
+    path('', include(router.urls)),
+]
+```
+
+views.py
+```python
+from .models import Student
+from .serializers import StudentSerializer
+from rest_framework import viewsets
+from rest_framework.authentication import BasicAuthentication 
+from rest_framework.permissions import IsAuthenticated, AllowAny, IsAdminUser
+
+class StudentModelViewSet(viewsets.ModelViewSet):
+    queryset = Student.objects.all()
+    serializer_class = StudentSerializer
+    # the below code is to do authentication if it is not made in settings.py or you can mention it globally in settings.py
+    authentication_classes = [BasicAuthentication] # authenticated by username and password BasicAuthentication
+    # permission_classes = [IsAuthenticated] # basics operation permission
+    # permission_classes = [AllowAny] # anyone can allow a particular resource
+    permission_classes = [IsAdminUser] # now is_staff user can only access the resource # not by normal user
+    # is_staff should be true to access the resource or make changes in the resource
+
+# Anyone can allow a particular resource
+""""
+class StudentModelViewSet1(viewsets.ModelViewSet):
+    queryset = Student.objects.all()
+    serializer_class = StudentSerializer
+    # the below code is to do authentication
+    # authentication_classes = [BasicAuthentication] # authenticated by username and password BasicAuthentication
+    # permission_classes = [AllowAny] # anyone can allow a particular resource
+"""
+```
+
+settings.py
+```python
+# default authentication class will be basic authentication which is defined globally
+# that is Global Settings for Rest Framework - All View will be affected 
+# Global Settings can be overrided by Local
+"""
+REST_FRAMEWORK = {
+    'DEFAULT_AUTHENTICATION_CLASSES':['rest_framework.authentication.BasicAuthentication'],
+    'DEFAULT_PERMISSION_CLASSES':['rest_framework.permissions.IsAuthenticated']
+}
+"""
+```
+
+Where to get whole code 
+```text
+check in gs20 project
+``
+
+
+
