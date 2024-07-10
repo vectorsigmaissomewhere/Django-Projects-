@@ -72,4 +72,7 @@ urlpatterns = [
 Note
 ```text
 Research more about Custom Permission in Django REST framework
+Find the whole code in gs22
+Here we worked in views.py and custompermissions.py
+while the other code are similar to jitem 16
 ```
