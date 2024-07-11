@@ -140,7 +140,7 @@ Check the file gs24 , gs25 and gs26 to get the full code till code
 Coding Part Generate Token by exposing an API Endpoint
 
 admin.py
-```
+```python
 from django.contrib import admin
 from .models import Student
 # Register your models here.
