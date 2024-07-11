@@ -208,7 +208,7 @@ class StudentModelViewSet(viewsets.ModelViewSet):
 ```
 
 settings.py
-```text
+```python
 INSTALLED_APPS = [
     'django.contrib.admin',
     'django.contrib.auth',
@@ -223,7 +223,7 @@ INSTALLED_APPS = [
 ```
 
 urls.py
-```text
+```python
 from django.contrib import admin
 from django.urls import path, include
 from api import views
