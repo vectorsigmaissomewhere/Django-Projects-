@@ -1,4 +1,4 @@
-## Token Authentication in Django RESTC Framework
+## Token Authentication in Django REST Framework
 
 we have studied 
 ```text
