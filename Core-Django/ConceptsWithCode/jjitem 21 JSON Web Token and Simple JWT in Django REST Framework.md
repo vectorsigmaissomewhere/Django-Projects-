@@ -347,7 +347,10 @@ Insert date
 ```text
 http -f POST http://127.0.0.1:8000/studentapi/ name=rahul roll=102 city=Bokaro 'Authorization:Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ0b2tlbl90eXBlIjoiYWNjZXNzIiwiZXhwIjoxNzIwODE3OTExLCJpYXQiOjE3MjA4MTU4NTQsImp0aSI6ImI5ZDA2ZTJkZGI5MzQxNjRiN2QxMGFjMDQzNmY4NDA3IiwidXNlcl9pZCI6Mn0.BAOM6hLll4aEW3XFfVnQXu_Vy-vZ1GEDf8lsxlNBjK0'
 ```
-
+Where to get the whole code
+```text
+gs30
+```
 Conclusion
 ```text
 Here we learned about how JWT Token works
