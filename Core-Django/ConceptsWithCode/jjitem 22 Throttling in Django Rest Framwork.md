@@ -77,6 +77,9 @@ about the program
 ```
 This program will let anonymous user to make only 2 request in a day
 and an authenticate user to make 5 request in an hour
+
+Here you need to take care of views.py ,setttings.py and urls.py cause the rest
+of the program is similar to other program 
 ```
 
 views.py
@@ -105,6 +108,25 @@ REST_FRAMEWORK= {
         'user': '5/hour',
     }
 }
+```
+urls.py
+```python
+from django.contrib import admin
+from django.urls import path, include
+from api import views
+from rest_framework.routers import DefaultRouter
+
+# Creating Router Object
+router = DefaultRouter() 
+
+# Register StudentViewSet With Router
+router.register('studentapi', views.StudentModelViewSet, basename='student')
+
+urlpatterns = [
+    path('admin/', admin.site.urls),
+    path('', include(router.urls)),
+    path('auth/', include('rest_framework.urls',namespace='rest_framework')), #browseable api url in drf for login logout, provides option to login and logout
+]
 ```
 
 admin.py
