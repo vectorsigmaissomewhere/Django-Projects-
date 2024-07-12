@@ -84,3 +84,55 @@ urlspatterns = [
     path('verifytoken/', TokenVerifyView.as_view(), name='token_verify'), # this is optional , use this when user is sending request and generating token
 ]
 ```
+
+JWT Default Settings
+```text
+from datetime import timedelta
+SIMPLE_JWT={
+    'ACCESS_TOKEN_LIFETIME': timedelta(minutes=5), # this means you token will expire in 5 minutes
+    'REFRESH_TOKEN_LIFETIME': timedelta(days=1), # extra token with expiry date of 1 day
+    'ROTATE_REFRESH_TOKENS': False, # setting false you will get only access token, setting it true will give you access token and refresh token
+    'BLACKLIST_AFTER_ROTATION': True,
+}
+```
+
+Some of the important properties 
+```text
+ACCESS_TOKEN_LIFETIME': A datetime.timedelta object which specifies how 
+long access tokens are valid.
+
+REFESH_TOKEN_LIFETIME- A datetime.timedelta object which specifies how 
+long refresh tokens are valid.
+```
+
+Use JWT
+```text
+GET Token
+http POST http://127.0.0.1:8000/gettoken/ username="user1" password="yourpassword" 
+
+
+Verify Token
+http POST http://127.0.0.1:8000/verifytoken/
+token=""
+```
+
+Refresh Token
+```text
+http POST http://127.0.0.1:8000/refreshtoken/
+refresh="yourrefreshtoken"
+and when you enter you will get access get token
+
+
+When to use GET Token
+when I am registered in the api
+but to access the api i need get the token for authentication 
+
+and the server will give the user access token and refresh token
+but he forgets or access token gets exipred in that case he will get a 
+refresh token 
+```
+
+Permission Classes be the same
+
+we will only use IsAuthenticated
+
