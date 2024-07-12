@@ -417,3 +417,87 @@ http DELETE http://127.0.0.1:8000/studentapi/4/
 'Authorization:Token 621cdf999d9151f9aea52f00eb436aa689fa24'
 ```
 
+To test you need to set the above code same 
+
+model.py
+```python
+from django.db import models
+
+# Create your models here.
+class Student(models.Model):
+    name = models.CharField(max_length=50)
+    roll = models.IntegerField()
+    city = models.CharField(max_length=50)
+
+# This signal creates Auth Token for Users
+from django.conf import settings
+from django.db.models.signals import post_save
+from django.dispatch import receiver
+from rest_framework.authtoken.models import Token
+
+@receiver(post_save, sender=settings.AUTH_USER_MODEL)
+def create_auth_token(sender, instance=None, created=False, **kwargs):
+    if created:
+        Token.objects.create(user=instance)
+```
+
+urls.py
+```python
+from django.contrib import admin
+from django.urls import path, include
+from api import views
+from rest_framework.routers import DefaultRouter
+
+# Creating Router Object
+router = DefaultRouter() 
+
+# Register StudentViewSet With Router
+router.register('studentapi', views.StudentModelViewSet, basename='student')
+
+urlpatterns = [
+    path('admin/', admin.site.urls),
+    path('', include(router.urls)),
+    path('auth/', include('rest_framework.urls',namespace='rest_framework')), #browseable api url in drf for login logout, provides option to login and logout
+]
+```
+
+views.py
+```python
+from .models import Student
+from .serializers import StudentSerializer
+from rest_framework import viewsets
+from rest_framework.authentication import TokenAuthentication
+from rest_framework.permissions import IsAuthenticated, AllowAny, IsAdminUser
+
+class StudentModelViewSet(viewsets.ModelViewSet):
+    queryset = Student.objects.all()
+    serializer_class = StudentSerializer
+    # the below code is to do authentication if it is not made in settings.py or you can mention it globally in settings.py
+    authentication_classes = [TokenAuthentication] 
+    permission_classes = [IsAuthenticated] # basics operation permission, only logged in user can perform CRUD
+```
+
+Testing 
+```text
+Get data without using TokenAuthentication
+```text
+http http://127.0.0.1:8000/studentapi/ 
+```
+
+Get data and using other methods after using TokenAutentication
+```text
+http http://127.0.0.1:8000/studentapi/ 'Authorization:Token 2dd7c135df61976a36ace87f482dbaa488794b24'
+
+http -f POST  http://127.0.0.1:8000/studentapi/ name=Jay roll=104 city=Dhanbad 'Authorization:Token 2dd7c135df61976a36ace87f482dbaa488794b24'
+```
+
+Where to get the full code
+```text
+check gs24, gs25, gs26 , gs27 and gs28 to get the full code
+```
+
+Conclusion
+```text
+here we learned to generate token of a user from different way
+also we learned about how only an authenticated user can make different types of requests using httpie
+```
