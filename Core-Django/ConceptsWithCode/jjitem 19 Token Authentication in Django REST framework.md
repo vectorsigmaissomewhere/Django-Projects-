@@ -283,9 +283,10 @@ check code in gs27
 What we are trying to do is whenever a user is created a token should be
 created so for that we need to write signals
 
-Coding Part 
+## Coding Part to generate token using signals
+
 admin.py
-```text
+```python
 from django.contrib import admin
 from .models import Student
 # Register your models here.
