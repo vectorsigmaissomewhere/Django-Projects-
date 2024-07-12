@@ -227,3 +227,121 @@ Where to find code till now
 ```text
 Check the above code in gs31
 ```
+
+## Coding throttling in each of the view sets 
+```text
+This program shows how many times a user can use a particular function in a day , hour or minute
+we are using browseable api for this
+```
+
+admin.py
+```python
+from django.contrib import admin
+from .models import Student
+# Register your models here.
+
+@admin.register(Student)
+class StudentAdmin(admin.ModelAdmin):
+    list_display = ['id','name','roll','city']
+```
+
+models.py
+```python
+from django.db import models
+
+# Create your models here.
+class Student(models.Model):
+    name = models.CharField(max_length=50)
+    roll = models.IntegerField()
+    city = models.CharField(max_length=50)
+```
+
+serializers.py
+```python
+from rest_framework import serializers
+from .models import Student
+
+class StudentSerializer(serializers.ModelSerializer):
+    class Meta:
+        model = Student
+        fields = ['id','name','roll','city']
+```
+
+views.py
+```python
+from .models import Student
+from .serializers import StudentSerializer
+from rest_framework.generics import ListAPIView # used for getting data
+from rest_framework.generics import CreateAPIView # used for creating post
+from rest_framework.generics import RetrieveAPIView # used for getting data according to id
+from rest_framework.generics import UpdateAPIView # used to updating data according to id 
+from rest_framework.generics import DestroyAPIView # used to delete data according to id 
+from rest_framework.throttling import ScopedRateThrottle # used to throttle in each view 
+
+class StudentList(ListAPIView):
+    queryset = Student.objects.all()
+    serializer_class = StudentSerializer
+    throttle_classes = [ScopedRateThrottle]
+    throttle_scope = 'viewstu' # only 5 request per hour for this view
+
+class StudentCreate(CreateAPIView):
+    queryset = Student.objects.all()
+    serializer_class = StudentSerializer
+    throttle_classes = [ScopedRateThrottle]
+    throttle_scope = 'modifystu'
+
+class StudentRetrieve(RetrieveAPIView):
+    queryset = Student.objects.all()
+    serializer_class = StudentSerializer
+    throttle_classes = [ScopedRateThrottle]
+    throttle_scope = 'viewstu' # only 5 request per hour for this view
+
+class StudentUpdate(UpdateAPIView):
+    queryset = Student.objects.all()
+    serializer_class = StudentSerializer
+    throttle_classes = [ScopedRateThrottle]
+    throttle_scope = 'modifystu'
+
+class StudentDestroy(DestroyAPIView):
+    queryset = Student.objects.all()
+    serializer_class = StudentSerializer
+    throttle_classes = [ScopedRateThrottle]
+    throttle_scope = 'modifystu'
+```
+
+settings.py
+```python
+
+REST_FRAMEWORK = {
+    'DEFAULT_THROTTLE_RATES': {
+        'viewstu': '5/hour',
+        'modifystu': '2/day',
+    }
+}
+```
+
+urls.py
+```python
+from django.contrib import admin
+from django.urls import path
+from api import views
+
+from django.contrib import admin
+from django.urls import path
+from api import views
+
+urlpatterns = [
+    path('admin/', admin.site.urls),
+    #path('studentapi/', views.StudentList.as_view()), # url for views 
+    path('studentapi/', views.StudentCreate.as_view()), # url to make post
+    #path('studentapi/<int:pk>/', views.StudentRetrieve.as_view()), # url for getting data
+    #path('studentapi/<int:pk>/', views.StudentUpdate.as_view()), # used for updating data
+    #path('studentapi/<int:pk>/',views.StudentDestroy.as_view()), # used to deleting data
+]
+```
+
+Conclusion 
+```text
+Get the full code from gs31 and gs32
+We learned about how we can reduce the request made by user in our api using throttling
+```
