@@ -275,3 +275,144 @@ X-Frame-Options: DENY
     "user_id": 1
 }
 ```
+
+4 Generate Token using signals
+
+check code in gs27
+
+What we are trying to do is whenever a user is created a token should be
+created so for that we need to write signals
+
+Coding Part 
+admin.py
+```text
+from django.contrib import admin
+from .models import Student
+# Register your models here.
+
+@admin.register(Student)
+class StudentAdmin(admin.ModelAdmin):
+    list_display = ['id','name','roll','city']
+```
+
+models.py
+```python
+from django.db import models
+
+# Create your models here.
+class Student(models.Model):
+    name = models.CharField(max_length=50)
+    roll = models.IntegerField()
+    city = models.CharField(max_length=50)
+
+# This signal creates Auth Token for Users
+from django.conf import settings
+from django.db.models.signals import post_save
+from django.dispatch import receiver
+from rest_framework.authtoken.models import Token
+
+@receiver(post_save, sender=settings.AUTH_USER_MODEL)
+def create_auth_token(sender, instance=None, created=False, **kwargs):
+    if created:
+        Token.objects.create(user=instance)
+```
+
+serializers.py
+```python
+from rest_framework import serializers
+from .models import Student
+
+class StudentSerializer(serializers.ModelSerializer):
+    class Meta:
+        model = Student
+        fields = ['id','name','roll','city']    
+```
+
+views.py
+```python
+from .models import Student
+from .serializers import StudentSerializer
+from rest_framework import viewsets
+from rest_framework.authentication import TokenAuthentication
+from rest_framework.permissions import IsAuthenticated, AllowAny, IsAdminUser
+
+class StudentModelViewSet(viewsets.ModelViewSet):
+    queryset = Student.objects.all()
+    serializer_class = StudentSerializer
+    # the below code is to do authentication if it is not made in settings.py or you can mention it globally in settings.py
+    # authentication_classes = [SessionAuthentication] 
+    # permission_classes = [IsAuthenticated] # basics operation permission, only logged in user can perform CRUD
+```
+
+settings.py
+```python
+INSTALLED_APPS = [
+    'rest_framework',
+    'rest_framework.authtoken',
+    'api',
+]
+```
+urls.py
+```python
+from django.contrib import admin
+from django.urls import path, include
+from api import views
+from rest_framework.routers import DefaultRouter
+
+# Creating Router Object
+router = DefaultRouter() 
+
+# Register StudentViewSet With Router
+router.register('studentapi', views.StudentModelViewSet, basename='student')
+
+urlpatterns = [
+    path('admin/', admin.site.urls),
+    path('', include(router.urls)),
+    path('auth/', include('rest_framework.urls',namespace='rest_framework')), #browseable api url in drf for login logout, provides option to login and logout
+]
+```
+how to generate token using signals
+```text
+- Go to your admin panel and create a user
+- Check your token table there you will see the token of that user
+```
+
+
+httpie
+```text
+HTTPie is a command Line HTTP client. Its goal is to make CLI interaction
+with web services as human-friendly as possible. It provides a simple 
+http command that allows for sending arbitrary HTTP requests using a 
+simple and natural syntax, and displays colorized output. HTTPie can be 
+used for testing, debugging, and generally interacting with HTTP servers.
+```
+
+Basic syntax of Httpie
+```text
+http [flags] [METHOD] URL [ITEM [ITEM]]
+```
+
+Use httpie
+```text
+GET Request
+http http://127.0.0.1:8000/studentapi/
+
+GET Request with Auth 
+http http://127.0.0.1:8000/studentapi/'Authorization:Token 
+621cdf999d9151f9aea52f00eb436aa689fa24'
+
+POST Request/ Submitting Form 
+http -f POST http://127.0.0.1:8000/studentapi/ name=Jay roll=104 
+city=Dhanbad
+'Authorization:Token 621cdf999d9151f9aea52f00eb436aa689fa24'
+
+PUT Request
+http PUT http://127.0.0.1:8000/studentapi/4/ name=kunal roll=109 
+city = Bokraro
+'Authorization:Token 621cdf999d9151f9aea52f00eb436aa689fa24'
+
+Delete Request
+http DELETE http://127.0.0.1:8000/studentapi/4/ 
+'Authorization:Token 621cdf999d9151f9aea52f00eb436aa689fa24'
+```
+
