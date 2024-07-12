@@ -162,4 +162,68 @@ class StudentSerializer(serializers.ModelSerializer):
         fields = ['id','name','roll','city']
 ```
 
+## Coding to Set Throtttling for each of the user here for user can make 3 request per minute
 
+settings.py
+```python
+REST_FRAMEWORK= {
+    'DEFAULT_THROTTLE_RATES':{
+        'anon': '2/day', # for anonymous user
+        'user': '5/hour',
+        'jack': '3/minute',
+    }
+}
+```
+
+views.py
+```python
+from .models import Student
+from .serializers import StudentSerializer
+from rest_framework import viewsets
+from rest_framework.permissions import IsAuthenticatedOrReadOnly
+from rest_framework.authentication import SessionAuthentication
+from rest_framework.throttling import AnonRateThrottle
+from rest_framework.throttling import UserRateThrottle
+from api.throttling import JackRateThrottle
+
+class StudentModelViewSet(viewsets.ModelViewSet):
+    queryset = Student.objects.all()
+    serializer_class = StudentSerializer
+    authentication_classes = [SessionAuthentication]
+    permission_classes = [IsAuthenticatedOrReadOnly]
+    throttle_classes = [AnonRateThrottle, JackRateThrottle]    
+```
+
+throttling.py
+```python
+from rest_framework.throttling import UserRateThrottle
+
+class JackRateThrottle(UserRateThrottle):
+    scope = 'jack'
+```
+
+urls.py
+```python
+from django.contrib import admin
+from django.urls import path, include
+from api import views
+from rest_framework.routers import DefaultRouter
+
+# Creating Router Object
+router = DefaultRouter() 
+
+# Register StudentViewSet With Router
+router.register('studentapi', views.StudentModelViewSet, basename='student')
+
+urlpatterns = [
+    path('admin/', admin.site.urls),
+    path('', include(router.urls)),
+    path('auth/', include('rest_framework.urls',namespace='rest_framework')), #browseable api url in drf for login logout, provides option to login and logout
+]
+```
+
+Where to find code till now
+
+```text
+Check the above code in gs31
+```
