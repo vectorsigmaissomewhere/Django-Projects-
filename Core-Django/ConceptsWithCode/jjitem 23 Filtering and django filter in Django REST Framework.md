@@ -5,6 +5,66 @@ about
 The simplest way to filter the queryset of any view that subclasses 
 GenericAPIView is to override the .get_queryset() method.
 ```
+Generic Filtering
+```text
+REST framework also includes support for generic filtering backends that
+allow you to easily construct searches and filters
+```
+
+DjangoFilterBackend
+```text
+The django-filter library includes a DjangoFilterBackend class which 
+supports highly customizable filed filtering for REST framework.
+```
+
+To use DjangoFilterBackend
+```text
+pip install django-filter
+INSTALLED_APPS = [
+    'django_filters',
+]
+
+read more about filters from :
+https://django-filter.readthedocs.io/en/latest/index.html
+```
+
+Implement directly in settings.py instead of views.py
+```text
+settings.py
+REST_FRAMEWORK = {
+    'DEFAULT_FILTER_BACKENDS':
+       [ 'django_filters.rest_framework.DjangoFilterBackend']
+}
+```
+
+Implement in every single view
+```text
+Per View Setting
+You can set the filter backends on a per-view, or per-viewset basis, using 
+the GenericAPIView class-based views.
+
+from django_filters.rest_framework import DjangoFilterBackend
+class StudentListView(ListAPIView):
+    queryset = Student.objects.all()
+    serializer_class = StudentSerializer
+    filter_backends = [DjangoFilterBackend]
+```
+
+How to use DjangoFilterBackend
+```text
+If all you need is simple equality-based filtering, you can set a 
+filterset_fields attribute on the view, or viewset, listing the set of fileds you 
+wish to filter against.
+
+class StudentList(ListAPIView):
+    queryset = Student.objects.all()
+    serializer_class = StudentSerializer
+    filter_backends = [DjangoFilterBackend] 
+    filterset_fields = ['name', 'city']
+
+and send request like in the below link
+http://127.0.0.1:8000/studentapi/?name=ronaldo&city=lisbon
+```
 
 ## Coding Part where there are students where their marks been checked by certain user that is user1 and user2
 ```text
