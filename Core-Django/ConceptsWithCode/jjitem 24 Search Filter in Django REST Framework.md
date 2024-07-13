@@ -91,3 +91,59 @@ What to hit in browseable api
 This will give the data of all the user that belongs to the city lisbon
 http://127.0.0.1:8000/studentapi/?search=lisbon
 ```
+
+## More about search 
+SearchFilter
+
+```text
+- '^' Starts-with search.
+- '=' Exact matches.
+- '@' Full-text search. (Currently only suported Django's PostgreSQL backend.)
+- '$' Regex search.
+```
+
+Example:-
+```text
+search_fields = ['^name^',]
+
+http://127.0.0.1:8000/studentapi/?search=r
+```
+
+views.py
+```python
+from .serializers import StudentSerializer
+from .models import Student
+from rest_framework.generics import ListAPIView
+from rest_framework.filters import SearchFilter
+
+class StudentList(ListAPIView):
+    queryset = Student.objects.all()
+    serializer_class = StudentSerializer
+    filter_backends = [SearchFilter]
+    #search_fields = ['city'] # search data based on city
+    #search_fields =['name','city'] # search based on name or city 
+    #search_fields = ['^name'] # get that name that belong to a character 
+    search_fields = ['=name'] # this should be equally match 
+```
+
+
+## Changing the url from search to q
+
+url before
+```text
+http://127.0.0.1:8000/studentapi/?search=
+```
+
+url now 
+```text
+http://127.0.0.1:8000/studentapi/?q
+```
+
+To do this 
+setting.py 
+```text
+REST_FRAMEWORK = {
+    'SEARCH_PARAM': 'q'
+}
+```
+
