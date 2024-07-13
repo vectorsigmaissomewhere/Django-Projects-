@@ -113,3 +113,20 @@ class StudentList(ListAPIView):
     filterset_fields = ['city']
 ```
 
+## Coding set filter in view only 
+
+views.py
+```python
+from django.shortcuts import render
+from .serializers import StudentSerializer
+from .models import Student
+from rest_framework.generics import ListAPIView
+from django_filters.rest_framework import DjangoFilterBackend
+
+class StudentList(ListAPIView):
+    queryset = Student.objects.all()
+    serializer_class = StudentSerializer
+    filter_backends = [DjangoFilterBackend] # mentioning filter locallly 
+    filterset_fields = ['city']
+    # filterset_fields  = ['name','city'] # for multiple fields
+```
