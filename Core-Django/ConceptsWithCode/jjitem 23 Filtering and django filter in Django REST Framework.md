@@ -113,7 +113,7 @@ class StudentList(ListAPIView):
     filterset_fields = ['city']
 ```
 
-## Coding set filter in view only 
+## Coding set filter in views only i.e locally 
 
 views.py
 ```python
