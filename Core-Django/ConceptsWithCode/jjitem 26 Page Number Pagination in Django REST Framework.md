@@ -169,6 +169,10 @@ urlpatterns = [
 ]
 ```
 
+Where to get the whole code
+```text
+chedk gs38 to get the whole code
+```
 conclusion
 ```text
 From here we learned about how to do pagination
