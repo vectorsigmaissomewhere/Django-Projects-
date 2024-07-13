@@ -86,7 +86,13 @@ How the link look like
 http://127.0.0.1:8000/studentapi/?ordering=city
 ````
 
+To get the whole code
+```text
+check gs36
+```
+
 Conclusion
 ```text
 From here we learned to filter data from ascending to descending and vice-versa
 ```
+
