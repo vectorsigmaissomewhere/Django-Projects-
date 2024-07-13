@@ -84,3 +84,32 @@ where to find the full code
 gs33
 ```
 
+
+## Coding get the data of user who lives in a certain city, we are setting it globally
+
+settings.py
+```python
+INSTALLED_APPS = [
+'api',
+'django_filters',
+'rest_framework',
+]
+
+REST_FRAMEWORK = {
+    'DEFAULT_FILTER_BACKENDS':['django_filters.rest_framework.DjangoFilterBackend'],
+}
+```
+
+views.py
+```python
+from django.shortcuts import render
+from .serializers import StudentSerializer
+from .models import Student
+from rest_framework.generics import ListAPIView
+
+class StudentList(ListAPIView):
+    queryset = Student.objects.all()
+    serializer_class = StudentSerializer
+    filterset_fields = ['city']
+```
+
