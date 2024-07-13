@@ -147,3 +147,7 @@ REST_FRAMEWORK = {
 }
 ```
 
+To get the full code
+```text
+check gs35
+```
