@@ -20,5 +20,5 @@ item 22: learned about throttling, to increase or decrease the request in our ap
 item 23 to 25: learned about filtering
 item 26 to 28: learned about different ways of doing pagination
 item 29 to 31: learned about serializer 
-
+item 32: learned to connect django with react js
 ```
