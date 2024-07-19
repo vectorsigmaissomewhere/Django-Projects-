@@ -1,5 +1,7 @@
 ## Here we will learn how to connect Django with react js 
 
+## Django Code 
+
 api/admin.py
 ```python
 from django.contrib import admin
