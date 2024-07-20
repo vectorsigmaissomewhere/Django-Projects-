@@ -211,6 +211,9 @@ import axios from "axios";
 
 function App() {
   const [students, setStudents] = useState([]);
+  const [editStudent, setEditStudent] = useState(null);
+  const [editStudentname, setEditStudentname] = useState('');
+  const [editStudentemail, setEditStudentemail] = useState('');
 
   useEffect(() => {
     async function getAllStudent() {
@@ -233,6 +236,28 @@ function App() {
       .catch(error => console.error('Error deleting data:', error));
   };
 
+  const handleEditClick = (student) => {
+    setEditStudent(student);
+    setEditStudentname(student.stuname);
+    setEditStudentemail(student.email);
+  } 
+
+  const handleUpdateSubmit = (e) => {
+    e.preventDefault();
+    const updatedStudent = { ...editStudent, stuname: editStudentname, email: editStudentemail };
+
+    axios.put(`http://127.0.0.1:8000/api/student/update/${editStudent.id}/`, updatedStudent)
+      .then(() => {
+        setStudents(students.map(student =>
+          student.id === editStudent.id ? updatedStudent : student
+        ));
+        setEditStudent(null);
+        setEditStudentname('');
+        setEditStudentemail('');
+      })
+      .catch(error => console.error('Error updating data:', error));
+  }
+
   return (
     <>
       <div className="App">
@@ -242,16 +267,39 @@ function App() {
             return (
               <h2 key={i}>{student.id} {student.stuname} {student.email}
                 <button onClick={() => deleteStudent(student.id)}>Delete</button>
+                <button onClick={() => handleEditClick(student)}>Edit</button>
               </h2>
             );
           })
         }
+        
+        {editStudent && (
+          <div>
+            <h2>Edit Student</h2>
+            <form onSubmit={handleUpdateSubmit}>
+              <input
+                type="text"
+                placeholder="studentname"
+                value={editStudentname}
+                onChange={(e) => setEditStudentname(e.target.value)}
+                required
+              />
+              <input
+                type="email"
+                placeholder="studentemail"
+                value={editStudentemail}
+                onChange={(e) => setEditStudentemail(e.target.value)}
+                required
+              />
+              <button type="submit">Update</button>
+              <button type="button" onClick={() => setEditStudent(null)}>Cancel</button>
+            </form>
+          </div>
+        )}
       </div>
     </>
   );
 }
-
-export default App;
 ```
 
 
