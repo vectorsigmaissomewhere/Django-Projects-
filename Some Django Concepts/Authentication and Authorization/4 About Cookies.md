@@ -1,5 +1,10 @@
 ## Cookies
 
+Get the full code from 
+```text
+https://github.com/vectorsigmaissomewhere/100-Django-Projects-/tree/main/aboutcookies
+```
+
 about
 ```text
 A cookie is a small piece of text data set by Web server that resided on the client's machine.
