@@ -248,6 +248,8 @@ function App() {
   // for post request
   const [postStudentName, setPostStudentName] = useState('');
   const [postStudentEmail, setPostStudentEmail] = useState(''); 
+  // for retrieving student
+  const [oneStudent, setOneStudent] = useState(null);
 
   const handleNameChange = (event) => {
     setPostStudentName(event.target.value);
@@ -313,6 +315,15 @@ function App() {
       .catch(error => console.error('Error updating data:', error));
   }
 
+  const viewStudent = (id) => {
+    axios.get(`http://127.0.0.1:8000/api/student/retrieve/${id}/`)
+      .then(response => {
+        console.log('Student retrieved:', response.data);
+        setOneStudent(response.data);
+      })
+      .catch(error => console.error('Error retrieving student:', error));
+  }
+
   return (
     <>
       <div className="App">
@@ -321,6 +332,7 @@ function App() {
           students.map((student, i) => {
             return (
               <h2 key={i}>{student.id} {student.stuname} {student.email}
+                <button onClick={() => viewStudent(student.id)}>View More</button>
                 <button onClick={() => deleteStudent(student.id)}>Delete</button>
                 <button onClick={() => handleEditClick(student)}>Edit</button>
               </h2>
@@ -349,6 +361,16 @@ function App() {
               <button type="submit">Update</button>
               <button type="button" onClick={() => setEditStudent(null)}>Cancel</button>
             </form>
+          </div>
+        )}
+
+        {oneStudent && (
+          <div>
+            <h2>Student Details</h2>
+            <p>ID: {oneStudent.id}</p>
+            <p>Name: {oneStudent.stuname}</p>
+            <p>Email: {oneStudent.email}</p>
+            <button onClick={() => setOneStudent(null)}>Close</button>
           </div>
         )}
 
