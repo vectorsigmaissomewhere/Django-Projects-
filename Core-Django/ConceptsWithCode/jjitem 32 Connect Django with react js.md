@@ -261,5 +261,7 @@ Note:
 CORS_ALLOWED_ORIGINS = [
     'http://localhost:5173', # this is the react port that is being running 
 ]
-the port number your are seeing is your react js port 
+the port number your are seeing is your react js port
+
+all the CRUD operation will be available at the end of the day 
 ```
