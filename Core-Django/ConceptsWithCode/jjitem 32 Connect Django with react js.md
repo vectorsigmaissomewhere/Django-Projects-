@@ -208,36 +208,45 @@ App.jsx
 ```jsx
 import { useState, useEffect } from "react";
 import axios from "axios";
-;
-function App() {
-  const [students, setStudents] = useState([])
 
-  useEffect(()=>{
-    async function getAllStudent(){
-      try{
-        const students = await axios.get("http://127.0.0.1:8000/api/student/");
-        console.log(students.data);
-        setStudents(students.data);
-      }
-      catch(error){
+function App() {
+  const [students, setStudents] = useState([]);
+
+  useEffect(() => {
+    async function getAllStudent() {
+      try {
+        const response = await axios.get("http://127.0.0.1:8000/api/student/");
+        console.log(response.data);
+        setStudents(response.data);
+      } catch (error) {
         console.log(error);
       }
     }
-    getAllStudent()
-  },[])
+    getAllStudent();
+  }, []);
+
+  const deleteStudent = (id) => {
+    axios.delete(`http://127.0.0.1:8000/api/student/delete/${id}/`)
+      .then(() => {
+        setStudents(students.filter(student => student.id !== id));
+      })
+      .catch(error => console.error('Error deleting data:', error));
+  };
 
   return (
     <>
-    <div className="App">
-      <h1>Connect React JS to Django</h1>
-      {
-        students.map((student, i)=>{
-          return (
-            <h2 key={i}>{student.stuname} {student.email}</h2>
-          )
-        })
-      }
-    </div>
+      <div className="App">
+        <h1>Connect React JS to Django</h1>
+        {
+          students.map((student, i) => {
+            return (
+              <h2 key={i}>{student.id} {student.stuname} {student.email}
+                <button onClick={() => deleteStudent(student.id)}>Delete</button>
+              </h2>
+            );
+          })
+        }
+      </div>
     </>
   );
 }
