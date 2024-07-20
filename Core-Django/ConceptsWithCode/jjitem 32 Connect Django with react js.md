@@ -38,7 +38,11 @@ from django.urls import path
 from api import views
 
 urlpatterns = [
-    path('student/', views.StudentList.as_view()),
+    path('student/', views.StudentList.as_view(), name='student-list'),
+    path('student/create/', views.StudentCreate.as_view(), name='student-create'),
+    path('student/retrieve/<int:pk>/', views.StudentRetrieve.as_view(), name='student-retrieve'),
+    path('student/update/<int:pk>/', views.StudentUpdate.as_view(), name='student-update'),
+    path('student/delete/<int:pk>/', views.StudentDestroy.as_view(), name='student-delete'),
 ]
 ```
 
@@ -46,9 +50,30 @@ api/views.py
 ```python
 from .serializers import StudentSerializer
 from rest_framework.generics import ListAPIView
+from rest_framework.generics import CreateAPIView
+from rest_framework.generics import RetrieveAPIView
+from rest_framework.generics import UpdateAPIView
+from rest_framework.generics import DestroyAPIView
+
 from .models import Student
 
 class StudentList(ListAPIView):
+    queryset = Student.objects.all()
+    serializer_class = StudentSerializer
+
+class StudentCreate(CreateAPIView):
+    queryset = Student.objects.all()
+    serializer_class = StudentSerializer
+
+class StudentRetrieve(RetrieveAPIView):
+    queryset = Student.objects.all()
+    serializer_class = StudentSerializer
+
+class StudentUpdate(UpdateAPIView):
+    queryset = Student.objects.all()
+    serializer_class = StudentSerializer
+
+class StudentDestroy(DestroyAPIView):
     queryset = Student.objects.all()
     serializer_class = StudentSerializer
 ```
@@ -185,12 +210,15 @@ APPEND_SLASH=False
 
 djangobackend/urls.py
 ```python
-from django.contrib import admin
-from django.urls import path, include
+from django.urls import path
+from api import views
 
 urlpatterns = [
-    path('admin/', admin.site.urls),
-    path('api/',include('api.urls'))
+    path('student/', views.StudentList.as_view(), name='student-list'),
+    path('student/create/', views.StudentCreate.as_view(), name='student-create'),
+    path('student/retrieve/<int:pk>/', views.StudentRetrieve.as_view(), name='student-retrieve'),
+    path('student/update/<int:pk>/', views.StudentUpdate.as_view(), name='student-update'),
+    path('student/delete/<int:pk>/', views.StudentDestroy.as_view(), name='student-delete'),
 ]
 ```
 
@@ -213,9 +241,34 @@ import axios from "axios";
 
 function App() {
   const [students, setStudents] = useState([]);
+  // for put request
   const [editStudent, setEditStudent] = useState(null);
   const [editStudentname, setEditStudentname] = useState('');
   const [editStudentemail, setEditStudentemail] = useState('');
+  // for post request
+  const [postStudentName, setPostStudentName] = useState('');
+  const [postStudentEmail, setPostStudentEmail] = useState(''); 
+
+  const handleNameChange = (event) => {
+    setPostStudentName(event.target.value);
+  }
+
+  const handleEmailChange = (event) => {
+    setPostStudentEmail(event.target.value);
+  }
+
+  const handleSubmit = (event) => {
+    event.preventDefault();
+    const context = { stuname: postStudentName, email: postStudentEmail };
+    axios.post('http://127.0.0.1:8000/api/student/create/', context)
+      .then(response => {
+        console.log('Student added:', response.data);
+        alert(`Form submitted with input: ${postStudentName} ${postStudentEmail}`);
+        setPostStudentName('');
+        setPostStudentEmail('');
+      })
+      .catch(error => console.error('Error adding student:', error));
+  }
 
   useEffect(() => {
     async function getAllStudent() {
@@ -298,10 +351,21 @@ function App() {
             </form>
           </div>
         )}
+
+        <h1>Add Students</h1>
+        <form onSubmit={handleSubmit}>
+          <label>Enter your Name</label>
+          <input type="text" value={postStudentName} onChange={handleNameChange} />
+          <label>Enter your Email</label>
+          <input type="email" value={postStudentEmail} onChange={handleEmailChange} />
+          <button type="submit">Submit</button>
+        </form>
       </div>
     </>
   );
 }
+
+export default App;
 ```
 
 
