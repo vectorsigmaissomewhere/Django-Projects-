@@ -1,6 +1,6 @@
 ## Here we will learn how to connect Django with react js 
 
-## Django Code 
+## CRUD USING DJANGO REST FRAMEWORK AND REACT JS 
 
 api/admin.py
 ```python
