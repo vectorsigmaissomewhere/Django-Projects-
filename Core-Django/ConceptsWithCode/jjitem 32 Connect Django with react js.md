@@ -179,6 +179,8 @@ REST_FRAMEWORK = {
 CORS_ALLOWED_ORIGINS = [
     'http://localhost:5173', # this is the react port that is being running 
 ]
+
+APPEND_SLASH=False
 ```
 
 djangobackend/urls.py
@@ -310,6 +312,10 @@ CORS_ALLOWED_ORIGINS = [
     'http://localhost:5173', # this is the react port that is being running 
 ]
 the port number your are seeing is your react js port
+
+- add APPEND_SLASH=False
+in your setting.py file add APPEND_SLASH = false
+
 
 all the CRUD operation will be available at the end of the day 
 ```
