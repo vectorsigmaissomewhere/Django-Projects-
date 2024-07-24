@@ -587,8 +587,11 @@ django-dotenv==1.4.2
 djangorestframework==3.15.1
 djangorestframework-simplejwt==5.3.1
 ```
-
-
+Note
+```text
+You cannot change the password without knowing the password
+As Google doesn't allow to let third party application to help in change password(something like that)
+```
 ## Frontend code
 
 components/Footer.jsx
@@ -745,25 +748,263 @@ const Register = () => {
 export default Register;
 ```
 
+Login.jsx
+```jsx
+import React, { useState } from 'react';
+import axios from 'axios';
+import { useNavigate } from 'react-router-dom';
+
+const Login = () => {
+  const [email, setEmail] = useState('');
+  const [password, setPassword] = useState('');
+  const [message, setMessage] = useState('');
+  const [errors, setErrors] = useState({});
+  const navigate = useNavigate();
+
+  const handleSubmit = (e) => {
+    e.preventDefault();
+
+    const userCredentials = { email, password };
+
+    axios.post('http://127.0.0.1:8000/api/user/login/', userCredentials)
+      .then(response => {
+        setEmail('');
+        setPassword('');
+        setMessage('Login Successful');
+        setErrors({});
+
+        // Store tokens in localStorage
+        localStorage.setItem('refreshToken', response.data.token.refresh);
+        localStorage.setItem('accessToken', response.data.token.access);
+
+        // Redirect to profile or other protected page
+        navigate('/profile');
+      })
+      .catch(error => {
+        console.error('Error logging in:', error);
+        setMessage('Login failed. Please try again.');
+        if (error.response && error.response.data) {
+          setErrors(error.response.data);
+        }
+      });
+  };
+
+  return (
+    <div className='login'>
+      <main>
+        <h1>Login</h1>
+        {message && <p>{message}</p>}
+        {errors && <ul>
+          {Object.keys(errors).map((key, index) => (
+            <li key={index}>{`${key}: ${errors[key]}`}</li>
+          ))}
+        </ul>}
+        <form onSubmit={handleSubmit}>
+          <div>
+            <label htmlFor='email'>Email</label>
+            <input
+              type='email'
+              id='email'
+              required
+              placeholder='Abc@xyz.com'
+              value={email}
+              onChange={(e) => setEmail(e.target.value)}
+            />
+          </div>
+          <div>
+            <label htmlFor='password'>Password</label>
+            <input
+              type='password'
+              id='password'
+              required
+              placeholder='Password'
+              value={password}
+              onChange={(e) => setPassword(e.target.value)}
+            />
+          </div>
+          <button type='submit'>Login</button>
+        </form>
+      </main>
+    </div>
+  );
+}
+
+export default Login;
+```
+
+Profile.jsx
+```jsx
+import React, { useState, useEffect } from 'react';
+import axios from 'axios';
+import { useNavigate } from 'react-router-dom';
+
+const Profile = () => {
+  const [profile, setProfile] = useState(null);
+  const [error, setError] = useState('');
+  const [loading, setLoading] = useState(true);
+  const navigate = useNavigate();
+
+  useEffect(() => {
+    const token = localStorage.getItem('accessToken');
+
+    if (!token) {
+      navigate('/login'); // Redirect to login if no token
+      return;
+    }
+
+    axios.get('http://127.0.0.1:8000/api/user/profile/', {
+      headers: {
+        Authorization: `Bearer ${token}`
+      }
+    })
+    .then(response => {
+      setProfile(response.data);
+      setLoading(false);
+      setError('');
+    })
+    .catch(error => {
+      console.error('Error fetching profile:', error);
+      setError('Failed to load profile.');
+      setLoading(false);
+    });
+  }, [navigate]);
+
+  if (loading) return <p>Loading profile...</p>;
+
+  return (
+    <div className='profile'>
+      <main>
+        <h1>User Profile</h1>
+        {error && <p>{error}</p>}
+        {profile ? (
+          <div>
+            <p><strong>ID:</strong> {profile.id}</p>
+            <p><strong>Email:</strong> {profile.email}</p>
+            <p><strong>Name:</strong> {profile.name}</p>
+          </div>
+        ) : (
+          <p>No profile data available.</p>
+        )}
+      </main>
+    </div>
+  );
+}
+
+export default Profile;
+```
+
+ChangePassword.jsx
+```jsx
+import React, { useState } from 'react';
+import axios from 'axios';
+
+const ChangePassword = () => {
+  const [password, setPassword] = useState('');
+  const [password2, setPassword2] = useState('');
+  const [message, setMessage] = useState('');
+  const [errors, setErrors] = useState({});
+  const [loading, setLoading] = useState(false);
+
+  const handleSubmit = (e) => {
+    e.preventDefault();
+    setLoading(true);
+
+    const passwordData = { password, password2 };
+
+    axios.post('http://127.0.0.1:8000/api/user/changepassword/', passwordData, {
+      headers: {
+        Authorization: `Bearer ${localStorage.getItem('accessToken')}`
+      }
+    })
+      .then(response => {
+        setPassword('');
+        setPassword2('');
+        setMessage(response.data.msg || 'Password changed successfully!');
+        setErrors({});
+      })
+      .catch(error => {
+        console.error('Error changing password:', error);
+        setMessage('Failed to change password. Please try again.');
+        if (error.response && error.response.data) {
+          setErrors(error.response.data);
+        }
+      })
+      .finally(() => {
+        setLoading(false);
+      });
+  };
+
+  return (
+    <div className='change-password'>
+      <main>
+        <h1>Change Password</h1>
+        {message && <p>{message}</p>}
+        {errors && <ul>
+          {Object.keys(errors).map((key, index) => (
+            <li key={index}>{`${key}: ${errors[key]}`}</li>
+          ))}
+        </ul>}
+        <form onSubmit={handleSubmit}>
+          <div>
+            <label htmlFor='password'>New Password</label>
+            <input
+              type='password'
+              id='password'
+              required
+              placeholder='Enter new password'
+              value={password}
+              onChange={(e) => setPassword(e.target.value)}
+            />
+          </div>
+          <div>
+            <label htmlFor='password2'>Confirm Password</label>
+            <input
+              type='password'
+              id='password2'
+              required
+              placeholder='Confirm new password'
+              value={password2}
+              onChange={(e) => setPassword2(e.target.value)}
+            />
+          </div>
+          <button type='submit' disabled={loading}>
+            {loading ? 'Changing Password...' : 'Change Password'}
+          </button>
+        </form>
+      </main>
+    </div>
+  );
+};
+
+export default ChangePassword;
+```
+
 App.jsx
 ```jsx
 import React from 'react';
-import { BrowserRouter as Router, Route, Routes } from "react-router-dom";
-import Register from "./components/Register";
-import Header from "./components/Header"; 
-import Footer from "./components/Footer"; 
+import { BrowserRouter as Router, Route, Routes } from 'react-router-dom';
+import Register from './components/Register';
+import Login from './components/Login';
+import Profile from './components/Profile';
+import Header from './components/Header'; 
+import Footer from './components/Footer'; 
+import ChangePassword from './components/ChangePassword'; 
 
 function App() {
   return (
-    <Router>
-      <Header />
-      <Routes>
-        <Route path="/" element={<h1>Home Page</h1>} />
-        <Route path="/register" element={<Register />} />
-      </Routes>
-      <Register />
-      <Footer />
-    </Router>
+    <>
+      <Router>
+        <Header />
+        <Routes>
+          <Route path="/register" element={<Register />} />
+          <Route path="/login" element={<Login />} />
+          <Route path="/profile" element={<Profile />} />
+          <Route path="/changepassword" element={<ChangePassword />} />
+          <Route path="/" element={<h1>Welcome to the App</h1>} />
+        </Routes>
+        <Footer />
+      </Router>
+    </>
   );
 }
 
