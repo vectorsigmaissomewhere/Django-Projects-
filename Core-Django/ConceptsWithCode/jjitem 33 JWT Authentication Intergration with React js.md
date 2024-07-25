@@ -1031,7 +1031,7 @@ ReactDOM.createRoot(document.getElementById('root')).render(
 ![See the user profile](https://github.com/vectorsigmaissomewhere/Django-Projects-/blob/main/SomeImages/checking%20userprofile.PNG)
 
 2 Change your password
-![Change your password part 1](https://github.com/vectorsigmaissomewhere/Django-Projects-/blob/main/SomeImages/passwordchangepart)
+![Change your password part 1](https://github.com/vectorsigmaissomewhere/Django-Projects-/blob/main/SomeImages/passwordchangepart1.PNG)
 ![Change your password part 2](https://github.com/vectorsigmaissomewhere/Django-Projects-/blob/main/SomeImages/passwordchangepart2.PNG)
 
 3 Change your password with email
