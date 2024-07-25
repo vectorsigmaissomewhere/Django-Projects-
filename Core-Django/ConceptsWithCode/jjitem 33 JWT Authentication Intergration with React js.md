@@ -1023,3 +1023,17 @@ ReactDOM.createRoot(document.getElementById('root')).render(
   </React.StrictMode>,
 )
 ```
+
+
+## Testing in POSTMAN API
+
+1 Check the user profile
+![See the user profile](https://github.com/vectorsigmaissomewhere/Django-Projects-/blob/main/SomeImages/checking%20userprofile.PNG)
+
+2 Change your password
+![Change your password part 1](https://github.com/vectorsigmaissomewhere/Django-Projects-/blob/main/SomeImages/passwordchangepart)
+![Change your password part 2](https://github.com/vectorsigmaissomewhere/Django-Projects-/blob/main/SomeImages/passwordchangepart2.PNG)
+
+3 Change your password with email
+![Change password with email part 1](https://github.com/vectorsigmaissomewhere/Django-Projects-/blob/main/SomeImages/sendpasswordresetemailpart1.PNG)
+![Change password with email part2](https://github.com/vectorsigmaissomewhere/Django-Projects-/blob/main/SomeImages/sendpasswordresetemailpart2.PNG)
