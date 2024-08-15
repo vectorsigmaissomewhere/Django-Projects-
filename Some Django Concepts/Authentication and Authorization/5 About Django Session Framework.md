@@ -267,3 +267,25 @@ This code set, get and delete session.
 Where in session it stores name and lname
 ```
 
+ Session Methods
+```text
+keys() method returns a view object that displays a list of all the keys 
+in the dictionary 
+Syntax:- dict.keys()
+
+items() method returns  the list with all dictionary keys with values.
+Syntax:- dict.items()
+
+clear() function is used to erase all the elements of list. After this operarion,
+ list becomes empty.
+Syntax:- dict.clear()
+
+setdefault() method returns the value of a key(if the key is in dictionary). 
+If not, it inserts key with a value to the dictionary.
+Syntax: dict.setdefault(key, default_value)
+
+flush()- It deletes the current session data from the session and delets the session cookie.
+This is used if you want to ensure that the previous session data can't be accessed again 
+from the user's browser(for example, the django.contrib.auth.logout() function calls it).
+```
+```
