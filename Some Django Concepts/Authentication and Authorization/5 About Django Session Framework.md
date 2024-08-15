@@ -288,4 +288,3 @@ flush()- It deletes the current session data from the session and delets the ses
 This is used if you want to ensure that the previous session data can't be accessed again 
 from the user's browser(for example, the django.contrib.auth.logout() function calls it).
 ```
-```
