@@ -268,6 +268,11 @@ This code set, get and delete session.
 Where in session it stores name and lname
 ```
 
+where to find the full code
+```text
+check sessionframework folder
+```
+
  Session Methods
 ```text
 keys() method returns a view object that displays a list of all the keys 
