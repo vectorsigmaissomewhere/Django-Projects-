@@ -59,6 +59,7 @@ This raises KeyError if the given key isn't already in the sesssion.
 - Contains
 'key' in request.session
 ```
+Program number 1 
 
 Set, Get, Delete session in Django 
 
@@ -287,4 +288,66 @@ Syntax: dict.setdefault(key, default_value)
 flush()- It deletes the current session data from the session and delets the session cookie.
 This is used if you want to ensure that the previous session data can't be accessed again 
 from the user's browser(for example, the django.contrib.auth.logout() function calls it).
+```
+
+Program number 2 
+```text
+- Here we will only work on views.py and getsession.html
+The rest of the program is similar to program number 1
+The new thing about this program is we have used flush method and other dictionary methods
+```
+views.py
+```python
+from django.shortcuts import render
+
+def setsession(request):
+    request.session['name'] = 'Sonam'
+    request.session['lname'] = 'Ronaldo'
+    return render(request, 'student/setsession.html')
+
+def getsession(request):
+    name = request.session.get('name')
+    lname = request.session.get('lname')
+    keys = request.session.keys()
+    items = request.session.items()
+    age = request.session.setdefault('age', '26')
+    return render(request, 'student/getsession.html', {'name': name,'lname': lname, 'keys': keys, 'items': items, 'age': age})
+
+def delsession(request):
+    if 'name' in request.session:
+        del request.session['name']
+        del request.session['lname']
+        # you can use sesion.flush() to remove all the sessions can delete all the session in single line of code 
+        # request.session.flush()
+    return render(request, 'student/delsession.html')
+```
+getsession.html
+```html
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Get Session</title>
+</head>
+<body>
+    <p>Your name from the session</p>
+    {{name}}
+    {{lname}}<br><hr>
+    <!--How to get session key-->
+    {% for key in keys %}
+    {{key}} 
+    {% endfor %}<br><hr>
+    {% for item in items %}
+    {{item}}
+    {% endfor %}<br><hr>
+    {% for key, value in items %}
+    {{key}} {{value}}
+    {% endfor %}
+</body>
+</html>
+```
+where to find the full code 
+``text
+check sessionframework2 folder 
 ```
