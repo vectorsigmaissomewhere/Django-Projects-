@@ -7,8 +7,8 @@ In settings.py, we have added 20 seconds for page session
 After 20 seconds the page session is expired
 request.session.modified = True
 What this is going to do is,
-
-
+When you try to get the session that http://127.0.0.1:8000/get 
+The new session expiration will restart from start
 ```
 
 settings.py
