@@ -254,6 +254,43 @@ def contact(request):
 Program number 2
 ```text
 Rest of the code is similar to program number 1
-you have to work only in 
+you have to work only in views.py and urls.py
 ```
+
+perviewcache/urls.py
+```python
+from django.contrib import admin
+from django.urls import path
+from enroll import views
+from django.views.decorators.cache import cache_page
+
+urlpatterns = [
+    path('admin/', admin.site.urls),
+    #path('', views.home),
+    path('',cache_page(120)(views.home)),
+    path('home/',views.home),
+    path('contact/', views.contact),
+]
+```
+
+enroll/templates/enroll/views.py
+```python
+from django.contrib import admin
+from django.urls import path
+from enroll import views
+from django.views.decorators.cache import cache_page
+
+urlpatterns = [
+    path('admin/', admin.site.urls),
+    #path('', views.home),
+    path('',cache_page(120)(views.home)),
+    path('home/',views.home),
+    path('contact/', views.contact),
+]
+```
+Where to find the full code
+```text
+check perviewcache
+```
+
 
