@@ -20,7 +20,7 @@ django.core.cache.cache
 ```
 
 How to use to Low Level Cache API 
-```python
+```text
 from django.core.cache import cache
 
 cache.set(key, value, timeout=DEFAULT_TIMEOUT, version=None) - This method is used to set cache,
