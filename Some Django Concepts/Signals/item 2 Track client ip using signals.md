@@ -1,5 +1,7 @@
 ## When you logs in it saves the ip in session using signals 
 
+Here I have only set the logic, implement it in your way 
+
 signals.py
 ```python
 from django.contrib.auth.signals import user_logged_in
