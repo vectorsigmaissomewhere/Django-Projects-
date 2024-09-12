@@ -233,3 +233,45 @@ This is before view
 This is after view
 Not Found: /favicon.ico
 ```
+
+
+Class Based Middleware
+```python
+class MyMiddleware:
+    def __init__(self, get_response):
+        self.get_response = get_response
+        # One-time configuration and initialization
+    def __call__(self, request):
+        # Code to be executed for each request before the view (and later middleware) are called
+        response = self.get_response(request)
+        # Code to be executed for each request/response after the view is called
+        return response
+```
+
+__init__(get_response)
+```text
+__init__(get_response) - Middleware factories must accept a get_response argument. You can also
+initialize some global state for the middleware. Keep in mind a couple of caveats:
+- Django initializes your middleware with only the get_response argument, so you can't define
+__init__() as requiring any other arguments.
+- Unlike the __call__() method which is called once per request, __init__() is called only once, when
+the Web server starts.
+```
+
+Activating Middleware
+```text
+To activate a middleware component, add it to the MIDDLEWARE list in your Django settings.
+
+In MIDDLEWARE, each middleware component is represented by a string: the full Python path to
+the middleware factory's class or function name. The order in MIDDLEWARE matters because a
+middleware can depend on other middleware. For instance, AuthenticationMiddleware stores the
+authenticated user in the sesion; therefore, it must run after SessionMiddlewarse.
+
+Eg. -
+MIDDLEWARE = [
+    'django.middleware.security.SecurityMiddleware',
+    'django.contrib.sessions.middleware.SessionMiddleware',
+    'blog.middlewares.MyMiddleware'
+    ]
+
+```
