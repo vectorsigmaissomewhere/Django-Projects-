@@ -42,5 +42,29 @@ The get_response callable provided by Django might be the actual view
 (if this is the last listed middleware) or it might be the next middleware
 in the chain.
 The current middleware doesn't need to know or care what exactly it is, just
-that it represents whatever comes next
+that it represents whatever comes next.
+
+The get_response callable for the last middleware in the chani won't be the actual
+view but rather a wrapper method from the handle which takes care of applying
+view middleware, calling the view with appropriate URL arguments, and applying
+template-response and exception middleware.
+
+Middleware can live anywhere on your Python path.
+```
+
+Activating Middleware
+```text
+To activate a middleware component, add it to the MIDDLEWARE list in your Django settings.
+In MIDDLEWARE, each middleware component is represented by a string: the full Python path
+to the middleware factory's class or function name. The order in MIDDLEWARE matters because a
+middleware can depend on other middleware. For instance, AuthenticationMiddleware stores the
+authenticated user in the session; therefore, it must run after SessionMiddleware.
+
+Eg.-
+MIDDLEWARE = [
+    'django.middleware.security.SecurityMiddleware',
+    'django.contrib.middleware.SessionMiddleware',
+    'blog.middlewares.my_middleware'
+    ]
+
 ```
