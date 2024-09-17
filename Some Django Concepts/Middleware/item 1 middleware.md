@@ -709,3 +709,45 @@ request - It is an HttpRequest object.
 response - It is the TemplateResponse object(or equivalent) returned by a Django view or by a
 middleware.
 ```
+
+Template Response
+```text
+TemplateResponse - TemplateResponse is a subclass of SimpleTemplateResponse that knows about 
+the current HttpRequest.
+
+A TemplateResponse object can be used anywhere that a normal django.http.HttpResponse can be 
+used. It can also be used as an alternative to calling render().
+
+Method
+
+__init__(request, template, context=None, context_type=None, status=None, charset=None,using = None)
+- It instantiates a TemplateResponse object with the given request, template, context, 
+content type, HTTP status, and charset.
+Where, 
+
+request - An HttpRequest instance.
+template - A backend-dependent template object(such as those returned by get_template()), the name
+of a template, or a list of template names.
+
+context - A dict of values to add to the template context. By default, this is an empty dictionary.
+context_type - The value included in the HTTP Content-Type header, including the MIME type 
+specification and the character set encoding. If content_type is specified, then its value is used.
+
+status - The HTTP status code for the response.
+
+charset - The charset in which the response will be encoded. If not given it will be extracted from 
+content_type, and if that is unsuccessful, the DEFAULT_CHARSET setting will be used.
+
+using  - The NAME of a template engine to use for loading the template.
+
+
+There are three circumstances under which a TemplateResponse will be rendered:
+When the TemplateResponse instance is explicitly rendered, using the 
+SimpleTemplateResponse.render() method.
+When the content of the response is explicitly set by assigning response.content.
+After passing through template response middleware, but before passing through
+response middleware.
+
+Note - 
+A TemplateResponse can only be rendered once.
+```
