@@ -659,6 +659,8 @@ and return the result.
 ```
 
 Middleware Hooks parameters
+
+process_view
 ```text
 process_view(request, view_func, view_args, view_kwargs)
 Where, 
@@ -671,4 +673,20 @@ view_kwargs - It is a dictionary of keyword arguments that will be
 passed to the view.
 Neither view_args nor view_kwargs include the first view argument
 (request).
+```
+
+process_exception
+```text
+process_exception(request, exception) - Django calls process_exception() when
+a view raises an exception.
+It should return either None or an HttpResponse object.
+If it returns an HttpResponse object, the template response and response middleware
+will be applied and the resulting response returned to the browser. Otherwise, default
+exception handling kicks in.
+Where,
+Request - It is an HttpRequest object.
+Exception - It is an Exception object raised by the view function.
+Note - Middleware are run in reverse order during the response phase, which includes
+process_exception. If an exception middleware returns a response, the process_exception
+methods of the middleware classes above that middleware won't be called at all.
 ```
