@@ -980,3 +980,123 @@ output
 There is a url for each
 so each url goes to the middleware
 ```
+
+
+
+## Build-in Middleware
+
+```text
+SecurityMiddleware - The django.middleware.security.SecurityMiddleware provides several security
+enhancements to the request/response cycle.
+
+Each one can be independently enabled or disabled with a setting.
+
+SECURE_BROWSER_XSS_FILTER
+SECURE_CONTENT_TYPE_NOSNIFF
+SECURE_HSTS_INCLUDE_SUBDOMAINS
+SECURE_HSTS_PRELOAD
+SECURE_HSTS_SECONDS
+SECURE_REDIRECT_EXEMPT
+SECURE_REFERRER_POLICY
+SECURE_SSL_HOST
+SECURE_SSL_REDIRECT
+```
+
+SECURE_BROWSER_XSS_FILTER
+```text
+If true, the SecurityMiddleware sets the X-XSS-Protection:
+1; mode=block header on all responses that do not already have it
+
+Modern browsers don't honor X-XSS-Protection HTTP header anymore.  Although the setting offeres
+little practical benefit, you may still want to set the header if you support older browsers. Default is
+False
+
+SECURE_CONTENT_TYPE_NOSNIFF - If True, the SecurityMiddleware sets the X-Content-Type-Options: nosniff
+header on all responses that do not already have it. Default is True
+
+SECURE_HSTS_INCLUDE_SUBDOMAINS - If True, the SecurityMiddleware adds the include SubDomains directive to 
+the HTTP strict Transport Security header. It has no effect unless SECURE_HSTS_SECONDS is set to a 
+non-zero value. Defaults is False.
+
+SECURE_HSTS_PRELOAD - If True, the SecurityMiddleware adds the preload directive to the HTTP Strict 
+Transport Security header. It has no effect unless SECURE_HSTS_SECONDS is set to a non-zero value. 
+Default is False.
+
+SECURE_HSTS_SECONDS - If set to a non-zero integer value, the SecurityMiddleware sets the HTTP Strict
+Transport Security header on all responses that do not already have it. Default is 0
+
+SECURE_REDIRECT_EXEMPT - If a URL path matches a regular expression in this list, the request will not 
+be redirected to HTTPS. The SecurityMiddleware strips leading slashes from URL paths, so patterns 
+shouldn't include them, e.g. SECURE_REDIRECT_EXEMPT = [r'^no-ssl/$',...].
+If SECURE_SSL_REDIRECT is False, this setting has no effect. Default is [] empty list
+
+SECURE_REFERRER_POLICY - If configured, the SecurityMiddleware sets the Referrer Policy
+header on all responses that do not already have it to the value provided. Default is None.
+
+SECURE_SSL_HOST - If a string(e.g. secure.example.com), all SSL redirects will be directed to 
+this host rather than the originally-requested host(e.g. www.example.com). If
+SECURE_SSL_REDIRECT is False, this setting has no effect. Default is None
+
+SECURE_SSL_REDIRECT - If True, the SecurityMiddleware redirects all non-HTTPS request to 
+HTTPS(except for those URLs matching a regular expression listed in SECURE_REDIRECT_EXEMPT).
+Default is False
+
+
+
+
+CommonMiddleware - Adds a few conveniences for perfectionists:
+
+Forbids access to user agents in the DISALLOWED_USER_AGENTS setting, which should be a list of 
+compiled regular expression objects.
+
+Performs URL rewriting based on the APPEND_SLASH and PREPEND_WWW settings.
+
+If APPEND_SLASH is True and the initial URL doesn't end with a slash, and it is not found in 
+the URLconf, then a new URL is formed by appending a slash at the end. If this new URL is found
+in the URLconf, then Django redirects the request to this new URL. Otherwise, the initial URL is
+processed as usual.
+
+For example, geekyshows.com/home will be redirected to geekyshows.com/home/ if you don't have a valid
+URL pattern for geekyshows.com/home but do have a valid pattern for geekyshows.com/home/.
+
+
+If PREPEND_WWW is True, URLs that lack a leading "www." will be redirected to the same URL with a 
+leading "www."
+
+Both of these options are meant to normalize URLs. The philosophy is that each URL should exist in one, and
+only one, place. Technically a URL geekyshows.com/home is distinct from geekyshows.com/home/ a search-engine 
+indexer would treat them as seperate URLs - so it's best practice to normalize URLs.
+
+
+
+UpdateCacheMiddleware and FetchFromCacheMiddleware
+UpdateCacheMiddleware and FetchFromCacheMiddleware - These middleware belongs to cache middleware.
+It enables the site-wide cache. If these are enabled, each Django-powered page will be 
+cached for as long as the CACHE_MIDDLEWARE_SECONDS settings defines.
+
+MessageMiddleware - Enables cookie - and session-based message support.
+
+
+SessionMiddleware - Enables session support
+
+AuthenticationMiddleware - It adds the user attribute, representing the currently-logged-in user, to 
+every incoming HttpRequest object.
+
+CsrfViewMiddleware - It adds protection against Cross Site Request Forgeries by adding hidden
+form fields to POST forms and checking requests for the correct value.
+
+XFrameOptionsMiddleware - Simple clickjacking protection via the X-Frame-Options header.
+
+FlatpageFallbackMiddleware - Should be near the bottom as it's a last-resort type of middleware.
+
+RedirectFallbackMiddleware - Should be near the bottom as it's last-resort type of middleware.
+
+LocalMiddleware - One of the topmost, after SessionMiddleware(uses session data) and 
+UpdateCacheMiddleware(modifies Vary header)
+
+ConditionalGetMiddleware - Before any middleware that may change the response(it sets the ETag header).
+After GZip Middleware so it won't calculate an ETag header on gzipped contents.
+
+GZipMiddleware - Before any middleware that may change or use the response body. After UpdateCacheMiddleware:
+Modifies Vary header.
+```
