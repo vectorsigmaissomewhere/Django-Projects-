@@ -642,3 +642,33 @@ This is Mommy after view
 This is Father after view
 This is Brother after view
 ```
+
+
+## Middleware Hooks
+```text
+Following are special methods to class-based middleware:
+process_view(request, view_func, view_args, view_kwargs) - It is called
+just before Django calls the view.
+It should return either None or an HttpResponse object.
+If it returns None, Django will continue processing this request, 
+executing any other process_view() middleware and, then, the 
+appropriate view.
+It is returns an HttpResponse object, Django won't bother calling the 
+appropriate view; it'll apply response middleware to that HttpResponse
+and return the result.
+```
+
+Middleware Hooks parameters
+```text
+process_view(request, view_func, view_args, view_kwargs)
+Where, 
+Request - It is an HttpRequest object.
+view_func - It is the Python function that Django is about to use. (It's 
+the actual function object, not the name of the function as a string.)
+view_args - It is a list of positional arguments that will be passed to the 
+view.
+view_kwargs - It is a dictionary of keyword arguments that will be 
+passed to the view.
+Neither view_args nor view_kwargs include the first view argument
+(request).
+```
