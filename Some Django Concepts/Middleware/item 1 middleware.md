@@ -751,3 +751,232 @@ response middleware.
 Note - 
 A TemplateResponse can only be rendered once.
 ```
+
+
+## Middleware Hooks
+
+blog/templates/blog/user.html
+```html
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Document</title>
+</head>
+<body>
+    {{ name }}
+</body>
+</html>
+```
+
+blog/templates/middlewares.py
+```python
+from django.shortcuts import HttpResponse
+class MyProcessMiddleware:
+    def __init__(self, get_response):
+        self.get_response = get_response
+    
+    def __call__(self, request):
+        response = self.get_response(request)
+        return response
+    
+    def process_view(request, *args, **kwargs):
+        print("This is Process View - Before View")
+        return HttpResponse("This is before view")
+    
+    # process view 
+    """
+    def process_view(request, *args, **kwargs):
+        print("This is Process View - Before View")
+        return None
+    """
+
+class MyExceptionMiddleware:
+    def __init__(self, get_response):
+        self.get_response = get_response
+    
+    def __call__(self, request):
+        response = self.get_response(request)
+        return response
+    
+    def process_exception(self, request, exception):
+        print("Exception Occured")
+        msg = exception
+        class_name = exception.__class__.__name__
+        print(class_name)
+        print(msg)
+        return HttpResponse(msg)
+
+class MyTemplateResponseMiddleware:
+    def __init__(self, get_response):
+        self.get_response = get_response
+    
+    def __call__(self, request):
+        response = self.get_response(request)
+        return response
+    
+    def process_template_response(self, request, response):
+        print("Process Template Response From Middleware")
+        response.context_data['name'] = 'Sonam'
+        return response
+```
+
+blog/views.py
+```python
+from django.shortcuts import render, HttpResponse
+from django.template.response import TemplateResponse 
+
+def home(request):
+    print("I am Home View")
+    return HttpResponse("This is Home Page")
+
+def excp(request):
+    print("I am Excp View")
+    a = 10 / 0
+    return HttpResponse("This is Excp Page")
+
+def user_info(request):
+    print("I am User Info View")
+    context = {'name':'Rahul'}
+    return TemplateResponse(request, 'blog/user.html', context)
+```
+
+middlewareHooks/settings.py
+```python
+from pathlib import Path
+
+# Build paths inside the project like this: BASE_DIR / 'subdir'.
+BASE_DIR = Path(__file__).resolve().parent.parent
+
+
+# Quick-start development settings - unsuitable for production
+# See https://docs.djangoproject.com/en/5.0/howto/deployment/checklist/
+
+# SECURITY WARNING: keep the secret key used in production secret!
+SECRET_KEY = 'django-insecure-y@(ms(tgtbq#8823zqlfh_$=-gse-*39g=5ejjt!3!7=dmyp@h'
+
+# SECURITY WARNING: don't run with debug turned on in production!
+DEBUG = True
+
+ALLOWED_HOSTS = []
+
+
+# Application definition
+
+INSTALLED_APPS = [
+    'django.contrib.admin',
+    'django.contrib.auth',
+    'django.contrib.contenttypes',
+    'django.contrib.sessions',
+    'django.contrib.messages',
+    'django.contrib.staticfiles',
+    'blog',
+]
+
+MIDDLEWARE = [
+    'django.middleware.security.SecurityMiddleware',
+    'django.contrib.sessions.middleware.SessionMiddleware',
+    'django.middleware.common.CommonMiddleware',
+    'django.middleware.csrf.CsrfViewMiddleware',
+    'django.contrib.auth.middleware.AuthenticationMiddleware',
+    'django.contrib.messages.middleware.MessageMiddleware',
+    'django.middleware.clickjacking.XFrameOptionsMiddleware',
+    'blog.middlewares.MyProcessMiddleware',
+    'blog.middlewares.MyExceptionMiddleware',
+    'blog.middlewares.MyTemplateResponseMiddleware',
+]
+
+ROOT_URLCONF = 'middlewareHooks.urls'
+
+TEMPLATES = [
+    {
+        'BACKEND': 'django.template.backends.django.DjangoTemplates',
+        'DIRS': [],
+        'APP_DIRS': True,
+        'OPTIONS': {
+            'context_processors': [
+                'django.template.context_processors.debug',
+                'django.template.context_processors.request',
+                'django.contrib.auth.context_processors.auth',
+                'django.contrib.messages.context_processors.messages',
+            ],
+        },
+    },
+]
+
+WSGI_APPLICATION = 'middlewareHooks.wsgi.application'
+
+
+# Database
+# https://docs.djangoproject.com/en/5.0/ref/settings/#databases
+
+DATABASES = {
+    'default': {
+        'ENGINE': 'django.db.backends.sqlite3',
+        'NAME': BASE_DIR / 'db.sqlite3',
+    }
+}
+
+
+# Password validation
+# https://docs.djangoproject.com/en/5.0/ref/settings/#auth-password-validators
+
+AUTH_PASSWORD_VALIDATORS = [
+    {
+        'NAME': 'django.contrib.auth.password_validation.UserAttributeSimilarityValidator',
+    },
+    {
+        'NAME': 'django.contrib.auth.password_validation.MinimumLengthValidator',
+    },
+    {
+        'NAME': 'django.contrib.auth.password_validation.CommonPasswordValidator',
+    },
+    {
+        'NAME': 'django.contrib.auth.password_validation.NumericPasswordValidator',
+    },
+]
+
+
+# Internationalization
+# https://docs.djangoproject.com/en/5.0/topics/i18n/
+
+LANGUAGE_CODE = 'en-us'
+
+TIME_ZONE = 'UTC'
+
+USE_I18N = True
+
+USE_TZ = True
+
+
+# Static files (CSS, JavaScript, Images)
+# https://docs.djangoproject.com/en/5.0/howto/static-files/
+
+STATIC_URL = 'static/'
+
+# Default primary key field type
+# https://docs.djangoproject.com/en/5.0/ref/settings/#default-auto-field
+
+DEFAULT_AUTO_FIELD = 'django.db.models.BigAutoField'
+```
+
+middlewareHooks/urls.py
+```python
+from django.contrib import admin
+from django.urls import path
+from blog import views
+
+urlpatterns = [
+    path('admin/', admin.site.urls),
+    path('', views.home),
+    path('excp/', views.excp),
+    path('user/', views.user_info),
+]
+```
+
+output
+```text
+There is a url for each
+so each url goes to the middleware
+```
