@@ -690,3 +690,22 @@ Note - Middleware are run in reverse order during the response phase, which incl
 process_exception. If an exception middleware returns a response, the process_exception
 methods of the middleware classes above that middleware won't be called at all.
 ```
+
+process_template_response
+```text
+process_template_response(request, response) - This method is called just after the view
+has finished executing, if the response instance has a render() method, indicating that it
+is a TemplateResponse or equivalent.
+
+It must return a response object that implements a render method.
+
+It could alter the given response by changing response.template_name and response.context_data,
+or it could create and return a brand-new TemplateResponse or equivalent.
+
+You don't need to explicitly render responses, responses will be automatically rendered once
+all template response middleware has been called.
+Where,
+request - It is an HttpRequest object.
+response - It is the TemplateResponse object(or equivalent) returned by a Django view or by a
+middleware.
+```
