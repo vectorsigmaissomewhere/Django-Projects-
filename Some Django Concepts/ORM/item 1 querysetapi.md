@@ -15,4 +15,9 @@ all() - This method is used to retrieve all objects. This returns a copy of
 current QuerySet.
 Example: - Student.objects.all()
 
+2. Retrieving specific objects
+filter(**kwargs) - It returns a new QuerySet containing objects that match the
+given lookup paramters. filter() will always give you a QuerySet, even if only
+a single object matches the query.
+Example: - Student.objects.filter(marks=70)
 ```
