@@ -24,4 +24,9 @@ Example: - Student.objects.filter(marks=70)
 exclude(**kwargs) - It returns a new QuerySet containing objects that do not match
 the given lookup parameters.
 Example: Student.objects.exclude(marks=70)
+
+order_by(*fields) - It orders the fields.
+- 'field' - Asc order
+- '-field' - Desc order
+- '?' - Randomly
 ```
