@@ -32,4 +32,8 @@ Example: Student.objects.exclude(marks=70)
 
 5. reverse() - This works only there is ordering in queryset
 
+6. values(*fields, **expression) - It returns a QuerySet that returns dictionaries, rather than
+model instances, when used as an iterable. Each of those dictionaries reprsents and object, with
+the keys corresponding to the attribute names of model objects.
+
 ```
