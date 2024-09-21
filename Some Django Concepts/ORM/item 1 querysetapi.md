@@ -36,4 +36,15 @@ Example: Student.objects.exclude(marks=70)
 model instances, when used as an iterable. Each of those dictionaries reprsents and object, with
 the keys corresponding to the attribute names of model objects.
 
+7. distinct(*fields) - This eliminates duplicate rows from the query results.
+
+8. values_list(*fields, flat=False, named=False) - This is similar to values() except that instead of
+returning dictionaries, it returns tuples when iterated over.
+- If you don't pass any values to values_list(), it will return all the fields in the model, in the
+order they were declared.
+- If you only pass in a single field, you can also pass in the flat parameter. If True, this will mean
+the returned results are single values, rather than one-tuples.
+- You can pass named=True to get results as a namedtuple
+
+
 ```
