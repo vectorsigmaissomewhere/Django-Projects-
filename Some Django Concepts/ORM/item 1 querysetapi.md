@@ -105,5 +105,18 @@ Less used query methods
 21. select_for_update(nowait=False, skip_located=False, of=())
 22. raw(raw_query, params=None, translations=None)
 23. annotate(*args, **kwargs)
+```
 
+Operators that return new QuerySets
+```text
+AND(&) - Combines two QuerySets using the SQL AND operator.
+Example:-
+student_data = Student.objects.filter(id=6) & Student.objects.filter(roll=106)
+student_data = Student.objects.filter(id=6, roll=106)
+student_data = Student.objects.filter(Q(id=6) & Q(roll=106))
+
+OR(|) - Combines two QuerySets using the SQL OR operator.
+Example:-
+Student.objects.filter(id=11) | Student.objects.filter(roll=106)
+Student.objects.filter(Q(id=11) | Q(roll=106))
 ```
