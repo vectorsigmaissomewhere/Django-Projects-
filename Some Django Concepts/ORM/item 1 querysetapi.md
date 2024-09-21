@@ -60,6 +60,7 @@ kind - It should be either "year", "month", "week", or "day".
 "month" returns a lit of all distinct year/month values for the field.
 "week" returns a list of all distinct year/month values for the field. All dates will be on Monday.
 "day" returns a list of all distinct year/month/day values for the field.
-order - It should be either 'ASC'
+order - It should be either 'ASC' or 'DESC'. This specifies how to order the results. defaults to 'ASC'
+Each datetime date object in the result list is "truncated" to the given type.
 
 ```
