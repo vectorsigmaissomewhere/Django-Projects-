@@ -87,4 +87,23 @@ Example :- student_data = Student.objects.none()
 The UNION operator selects only distinct values by default. To allow duplicate values, use the all=True
 argument.
 
+14. intersection(*other_qs) - Uses SQL's INTERSECT operator to return the shared elements of two or more
+QuerySets.
+Example :- student_data = qs1.intersection(qs2)
+
+15. difference(*other_qs) - Uses SQL's EXCEPT operator to keep only elements present in the QuerySet but
+not in some other QuerySets.
+Example :- student_data = qs1.difference(qs2)
+
+Less used query methods
+
+16. select_related(*fields)
+17. defer(*fields)
+18. only(*fields)
+19. prefetch_related(*lookups)
+20. extra(select=None, where=None, params=None, tables=None, order_by=None, select_params=None)
+21. select_for_update(nowait=False, skip_located=False, of=())
+22. raw(raw_query, params=None, translations=None)
+23. annotate(*args, **kwargs)
+
 ```
