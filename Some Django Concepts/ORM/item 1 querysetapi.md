@@ -49,6 +49,17 @@ the returned results are single values, rather than one-tuples.
 9. using(alias) - This method is for controlling which database the QuerySet will be evaluated against if
 you are using more than one database. The only argument this method takes is the alias of a database,
 as defined in DATABASES.
+Example:- student_data = Student.objects.using('default') # 'default' is the database name
 
+10. dates(field, kind, order='ASC') - It returns a QuerySet that evaluates to a list of datetime date objects
+representing all available dates of a particular kind within the contents of the QuerySet.
+Where,
+field - It should be the name of a DateField of your model.
+kind - It should be either "year", "month", "week", or "day".
+"year" returns a list of all distinct year values for the field.
+"month" returns a lit of all distinct year/month values for the field.
+"week" returns a list of all distinct year/month values for the field. All dates will be on Monday.
+"day" returns a list of all distinct year/month/day values for the field.
+order - It should be either 'ASC'
 
 ```
