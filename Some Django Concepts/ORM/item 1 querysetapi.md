@@ -63,4 +63,28 @@ kind - It should be either "year", "month", "week", or "day".
 order - It should be either 'ASC' or 'DESC'. This specifies how to order the results. defaults to 'ASC'
 Each datetime date object in the result list is "truncated" to the given type.
 
+11. datetimes(field_name, kind, order='ASC', tzinfo=None) - It returns a QuerySet that evaluates to
+a list of datetime.datetime objects representing all available dates of a particular kind within the contents
+of the QuerySet.
+Where,
+field - It should be the name of a DateField of your model.
+kind - It should be either "year", "month", "week", or "day".
+"year" returns a list of all distinct year values for the field.
+"month" returns a lit of all distinct year/month values for the field.
+"week" returns a list of all distinct year/month values for the field. All dates will be on Monday.
+"day" returns a list of all distinct year/month/day values for the field.
+order - It should be either 'ASC' or 'DESC'. This specifies how to order the results. defaults to 'ASC'
+tzinfo - It defines the time zone to which datetimes are converted prior to truncation. This parameter
+must be a datetime.tzinfo object. If it's None, Django uses the current time zone. It has no effect
+when USE_TZ is False.
+Each datetime date object in the result list is "truncated" to the given type.
+
+12. none() - Calling none() will create a queryset that never returns any objects and no query will
+be executed when accessing the results. A qs.none() queryset is an instance of EmptyQuerySet.
+Example :- student_data = Student.objects.none()
+
+13. union(*other_qs, all=False) - Uses SQL's UNION operator to combine the results of two or more QuerySets.
+The UNION operator selects only distinct values by default. To allow duplicate values, use the all=True
+argument.
+
 ```
