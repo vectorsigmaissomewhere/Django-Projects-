@@ -46,5 +46,9 @@ order they were declared.
 the returned results are single values, rather than one-tuples.
 - You can pass named=True to get results as a namedtuple
 
+9. using(alias) - This method is for controlling which database the QuerySet will be evaluated against if
+you are using more than one database. The only argument this method takes is the alias of a database,
+as defined in DATABASES.
+
 
 ```
