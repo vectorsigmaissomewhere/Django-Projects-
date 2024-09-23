@@ -11,4 +11,12 @@ first() - It returns the first object matched by the queryset, or None if there
 is no matching object. If the QuerySet has no ordering defined, then the queryset 
 is automatically ordered by the primary key.
 Example :- Studdent.objects.order_by('name').first()
+
+last() - It returns the last object matched by the queryset, or None if there is
+no matching object. If the QuerySet has no ordering defined, then the queryset is
+automatically ordered by the primary key.
+
+latest(*fields) - It returns the latest object in the table based on the given field(s).
+Example:- student_data = Student.objects.latest('pass_date')
+
 ```
