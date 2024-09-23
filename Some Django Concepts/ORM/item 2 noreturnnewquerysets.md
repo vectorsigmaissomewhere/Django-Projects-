@@ -491,3 +491,8 @@ def explainmethod(request):
     print("Return:", student_data)
     return render(request, 'school/home.html', {'student':student_data})
 ```
+
+Where to get the full code
+```text
+check querysetapinoreturnnewquerysets
+```
