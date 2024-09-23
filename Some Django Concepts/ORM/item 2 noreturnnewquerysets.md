@@ -1,7 +1,7 @@
 ## Method that do not return new QuerySets
 
 Retrieving a single object
-``text
+```text
 get() - It returns one single object. If There is no result match it will raise 
 DoesNotExist exception. If more than one item matches the get() query. It will 
 raise MultipleObjectsReturned.
