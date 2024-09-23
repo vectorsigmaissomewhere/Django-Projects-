@@ -3,7 +3,13 @@
 Tick Mark Which concept you know
 
 ```text
-drf 20 percent 
+drf
+cookies
+custom user model
+custom middleware
+redirect signals
+urls
+request and response cycle
 orm 
 ```
 What to learn
