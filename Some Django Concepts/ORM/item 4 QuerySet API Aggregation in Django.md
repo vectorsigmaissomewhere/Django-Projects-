@@ -329,7 +329,7 @@ Average Marks: 75.0 {'marks__avg': 75.0}
 Sum of Marks: 300 {'marks__sum': 300}
 Minimum Marks: 60 {'marks__min': 60}
 Maximum Marks: 90 {'marks__max': 90}
-``
+```
 
 Where to find the full code
 ```text
