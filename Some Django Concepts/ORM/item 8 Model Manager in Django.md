@@ -262,6 +262,43 @@ Student_data = Student.students.all()      # Work as per Custom Manager
 
 ## Coding 
 
+managers.py
+```python
+from django.db import models
+
+# gettting name data by order
+class CustomManager(models.Manager):
+    def get_queryset(self):
+        return super().get_queryset().order_by('name')
+```
+
+models.py
+```python
+from django.db import models
+from .managers import CustomManager
+# Create your models here.
+class Student(models.Model):
+    name = models.CharField(max_length=70)
+    roll = models.IntegerField()
+    # objects = models.Manager() # default ModelManager be objects in views but CustomMangager will also work
+    students = CustomManager() # now the name will come by order
+```
+views.py
+```python
+from django.shortcuts import render
+from .models import Student
+# Create your views here.
+
+def home(request):
+    student_data = Student.students.all()
+    return render(request, 'school/home.html', {'students': student_data})
+```
+
+where to find the fulll code 
+```text
+check modifytheinitialqueryset
+```
+
 
 ## Add extra Manager methods
 ```text
