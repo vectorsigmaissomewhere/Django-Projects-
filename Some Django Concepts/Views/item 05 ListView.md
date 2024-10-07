@@ -223,3 +223,332 @@ urlpatterns=[
 # Note - school/students.html, school/student_list.html These both will work.
 ```
 
+## Coding Part
+
+listview/settings.py
+```python
+from pathlib import Path
+
+# Build paths inside the project like this: BASE_DIR / 'subdir'.
+BASE_DIR = Path(__file__).resolve().parent.parent
+
+
+# Quick-start development settings - unsuitable for production
+# See https://docs.djangoproject.com/en/5.1/howto/deployment/checklist/
+
+# SECURITY WARNING: keep the secret key used in production secret!
+SECRET_KEY = 'django-insecure-7_3+sx%#h0$-j&qb3x6jy7fao$%)dfhsf#+q3(nqt8uznb!2$o'
+
+# SECURITY WARNING: don't run with debug turned on in production!
+DEBUG = True
+
+ALLOWED_HOSTS = []
+
+
+# Application definition
+
+INSTALLED_APPS = [
+    'django.contrib.admin',
+    'django.contrib.auth',
+    'django.contrib.contenttypes',
+    'django.contrib.sessions',
+    'django.contrib.messages',
+    'django.contrib.staticfiles',
+    'school',
+]
+
+MIDDLEWARE = [
+    'django.middleware.security.SecurityMiddleware',
+    'django.contrib.sessions.middleware.SessionMiddleware',
+    'django.middleware.common.CommonMiddleware',
+    'django.middleware.csrf.CsrfViewMiddleware',
+    'django.contrib.auth.middleware.AuthenticationMiddleware',
+    'django.contrib.messages.middleware.MessageMiddleware',
+    'django.middleware.clickjacking.XFrameOptionsMiddleware',
+]
+
+ROOT_URLCONF = 'listview.urls'
+
+TEMPLATES = [
+    {
+        'BACKEND': 'django.template.backends.django.DjangoTemplates',
+        'DIRS': [],
+        'APP_DIRS': True,
+        'OPTIONS': {
+            'context_processors': [
+                'django.template.context_processors.debug',
+                'django.template.context_processors.request',
+                'django.contrib.auth.context_processors.auth',
+                'django.contrib.messages.context_processors.messages',
+            ],
+        },
+    },
+]
+
+WSGI_APPLICATION = 'listview.wsgi.application'
+
+
+# Database
+# https://docs.djangoproject.com/en/5.1/ref/settings/#databases
+
+DATABASES = {
+    'default': {
+        'ENGINE': 'django.db.backends.sqlite3',
+        'NAME': BASE_DIR / 'db.sqlite3',
+    }
+}
+
+
+# Password validation
+# https://docs.djangoproject.com/en/5.1/ref/settings/#auth-password-validators
+
+AUTH_PASSWORD_VALIDATORS = [
+    {
+        'NAME': 'django.contrib.auth.password_validation.UserAttributeSimilarityValidator',
+    },
+    {
+        'NAME': 'django.contrib.auth.password_validation.MinimumLengthValidator',
+    },
+    {
+        'NAME': 'django.contrib.auth.password_validation.CommonPasswordValidator',
+    },
+    {
+        'NAME': 'django.contrib.auth.password_validation.NumericPasswordValidator',
+    },
+]
+
+
+# Internationalization
+# https://docs.djangoproject.com/en/5.1/topics/i18n/
+
+LANGUAGE_CODE = 'en-us'
+
+TIME_ZONE = 'UTC'
+
+USE_I18N = True
+
+USE_TZ = True
+
+
+# Static files (CSS, JavaScript, Images)
+# https://docs.djangoproject.com/en/5.1/howto/static-files/
+
+STATIC_URL = 'static/'
+
+# Default primary key field type
+# https://docs.djangoproject.com/en/5.1/ref/settings/#default-auto-field
+
+DEFAULT_AUTO_FIELD = 'django.db.models.BigAutoField'
+```
+
+listview/urls.py
+```python
+from django.contrib import admin
+from django.urls import path
+from school import views
+
+urlpatterns = [
+    path('admin/', admin.site.urls),
+    # this url shows listview
+    path('student/', views.StudentListView.as_view(), name='student'),
+    path('studentsecond/', views.StudentSecondListView.as_view(), name='studentsecond'),
+    path('studentthird/', views.StudentThirdListView.as_view(), name='studentthird'),
+    path('studentfourth/', views.StudentFourthListView.as_view(), name='studentfourth'),
+    path('studentfifth/', views.StudentFifthListView.as_view(), name='studentfifth'),
+]
+```
+
+school/templates/school/student_get.html
+```html
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Document</title>
+</head>
+<body>
+    <h1>This is student_get.html template</h1>
+    {% for student in student_list %}
+    {{student.name}}
+    {{student.roll}}
+    {{student.course}} <br>
+    {% endfor %}
+</body>
+</html>
+```
+
+school/templates/school/student_list.html
+```html
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Document</title>
+</head>
+<body>
+    {% for student in student_list %}
+    {{student.name}}
+    {{student.roll}}
+    {{student.course}} <br>
+    {% endfor %}
+</body>
+</html>
+```
+
+school/templates/school/studentthird.html
+```html
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Document</title>
+</head>
+<body>
+    <h1>This is student third page</h1>
+    {% for student in student_list %}
+    {{student.name}}
+    {{student.roll}}
+    {{student.course}} <br>
+    {% endfor %}
+</body>
+</html>
+```
+
+school/templates/school/studentfourth.html
+```html
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Document</title>
+</head>
+<body>
+    <h1>This is Student fourth html page as we have changed the context from student_list to students</h1>
+    {% for student in students %}
+    {{student.name}}
+    {{student.roll}}
+    {{student.course}} <br>
+    {% endfor %}
+</body>
+</html>
+```
+
+school/templates/school/studentfifth.html
+```html
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Document</title>
+</head>
+<body>
+    <h1>This is StudentFifthListView</h1>
+    {% for student in students %}
+    {{student.name}}
+    {{student.roll}}
+    {{student.course}} <br>
+    {% endfor %}
+    <br>
+    {% for student in freshers %}
+    {{student.name}}
+    {{student.roll}}
+    {{student.course}} <br>
+    {% endfor %}
+</body>
+</html>
+```
+
+school/admin.py
+```python
+from django.contrib import admin
+from .models import Student 
+# Register your models here.
+
+admin.site.register(Student)
+```
+
+student/models.py
+```python
+from django.db import models
+
+# Create your models here.
+class Student(models.Model):
+    name = models.CharField(max_length=70)
+    roll = models.IntegerField()
+    course = models.CharField(max_length=70)
+```
+
+school/views.py
+```python
+from django.shortcuts import render
+from django.views.generic.list import ListView 
+from .models import Student 
+
+
+# this view shows listview 
+class StudentListView(ListView):
+    model = Student 
+
+    # Use of ListView is I don't need to write the below lines of code
+    """
+    stud = Student.object.all()
+    context = {'student_list':stud}
+    return render(request, 'school/student_list.html', context)
+    """
+
+# custom listview 
+class StudentSecondListView(ListView):
+    model = Student 
+    # the above search for student_list.html while this view search for student_get.htmk
+    template_name_suffix = '_get'
+    # orders by name 
+    ordering = ['name']
+
+# in previous view we must have student_list.html or student_get.html as template name 
+# custom listview where we gonna change the template name 
+class StudentThirdListView(ListView):
+    model = Student
+    template_name = 'school/studentthird.html'
+
+# change context name 
+# that is our default context name is student_list in template page
+# but we are change it into students
+class StudentFourthListView(ListView):
+    model = Student 
+    template_name = 'school/studentfourth.html'
+    context_object_name = 'students'
+
+# filter data 
+# get only data whose course is Python from get_queryset method
+# get data with order of name but with context name freshers 
+class StudentFifthListView(ListView):
+    model = Student 
+    template_name = 'school/studentfifth.html'
+    context_object_name = 'students'
+
+    def get_queryset(self):
+        return Student.objects.filter(course='Python')
+    
+    def get_context_data(self, *args, **kwargs):
+        context = super().get_context_data(*args, **kwargs)
+        context['freshers'] = Student.objects.all().order_by('name')
+        return context
+```
+
+where to find the whole code 
+```text
+check listview
+```
+
+What we learned here
+```text
+we learned about listview
+using this you don't have to write lots of code for making get request
+also if you want any configuration like filtering models, changing template file and changing context name
+can be done 
+```
