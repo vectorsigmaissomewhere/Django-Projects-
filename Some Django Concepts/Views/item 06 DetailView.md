@@ -309,3 +309,104 @@ school/templates/school/student_detail.html
 </body>
 </html>
 ```
+
+school/templates/school/student_list.html
+```html
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Document</title>
+</head>
+<body>
+    <h1>This is student list </h1>
+    {% for student in student_list %}
+    <a href="{% url 'studentdetail' student.id %}">{{student.id}}</a><br>
+    {% endfor %} 
+</body>
+</html>
+```
+
+school/templates/school/student.html
+```html
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Document</title>
+</head>
+<body>
+    <h1>Custom Template Name</h1>
+    <h1>Student_detail Page</h1>
+    {{student.id}}
+    {{student.name}}
+    {{student.roll}}
+    {{student.course}}
+    {% for student in all_student %}
+    <a href="{% url 'studentdetail' student.id %}">{{student.id}}</a><br>
+    {% endfor %} 
+</body>
+</html>
+```
+
+school/models.py
+```python
+from django.db import models
+
+# Create your models here.
+class Student(models.Model):
+    name = models.CharField(max_length=70)
+    roll = models.IntegerField()
+    course = models.CharField(max_length=70)
+```
+
+school/views.py
+```python
+from django.shortcuts import render
+from .models import Student 
+from django.views.generic.detail import DetailView 
+from django.views.generic.list import ListView 
+
+# default template is student_detail, default context is student 
+class StudentDetailView(DetailView):
+    model = Student 
+
+    def get_context_data(self, *args, **kwargs):
+        context = super().get_context_data(*args, **kwargs)
+        context['all_student'] = self.model.objects.all()
+        return context 
+
+# custom template and default context is student
+class StudentDetailCustomTemplateView(DetailView):
+    model = Student 
+    # if you don't mention template_name student_detail.html will render
+    template_name = 'school/student.html'
+
+# custom context is stu  
+class StudentDetailCustomContextView(DetailView):
+    model = Student 
+    template_name = 'school/student_context.html'
+    context_object_name = 'stu'
+    """
+    change the object pk in url into id
+    pk_urk_kwarg = 'id'
+    url 
+    path('customcontextstudent/<int:id>/', views.StudentDetailCustomContextView.as_view(), name='customcontext'),
+    """
+
+# creating a list view 
+class StudentListView(ListView):
+    model = Student 
+```
+
+Where to find the full code
+```text
+check detailview
+```
+
+What can be learned from here
+````text
+It takes id or a string which we call slug to provide the overall full data 
+```
