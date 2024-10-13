@@ -89,6 +89,6 @@ check decoratorauthentication
 
 What to learn here
 ```text
-how decorator can help unauthorized user to not access the do unauthorized things in the website
+how decorator can help unauthorized user to not do unauthorized things in the website
 with the help of @login_required and @staff_member_required decorators 
 ```
