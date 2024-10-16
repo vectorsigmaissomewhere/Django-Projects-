@@ -325,3 +325,281 @@ permissions.
 - UserCreationForm - A ModelForm for creating a new user. 
 ```
 
+
+## Coding Part 
+
+customauthentication/settings.py
+```python
+from pathlib import Path
+
+# Build paths inside the project like this: BASE_DIR / 'subdir'.
+BASE_DIR = Path(__file__).resolve().parent.parent
+
+
+# Quick-start development settings - unsuitable for production
+# See https://docs.djangoproject.com/en/5.1/howto/deployment/checklist/
+
+# SECURITY WARNING: keep the secret key used in production secret!
+SECRET_KEY = 'django-insecure-tc(#guyc6jel__j=u%pskhoi##j$7pj9$vgf25^kz9p9kx-l9z'
+
+# SECURITY WARNING: don't run with debug turned on in production!
+DEBUG = True
+
+ALLOWED_HOSTS = []
+
+
+# Application definition
+
+INSTALLED_APPS = [
+    'django.contrib.admin',
+    'django.contrib.auth',
+    'django.contrib.contenttypes',
+    'django.contrib.sessions',
+    'django.contrib.messages',
+    'django.contrib.staticfiles',
+    'myapp',
+]
+
+MIDDLEWARE = [
+    'django.middleware.security.SecurityMiddleware',
+    'django.contrib.sessions.middleware.SessionMiddleware',
+    'django.middleware.common.CommonMiddleware',
+    'django.middleware.csrf.CsrfViewMiddleware',
+    'django.contrib.auth.middleware.AuthenticationMiddleware',
+    'django.contrib.messages.middleware.MessageMiddleware',
+    'django.middleware.clickjacking.XFrameOptionsMiddleware',
+]
+
+ROOT_URLCONF = 'customauthenticationview.urls'
+
+TEMPLATES = [
+    {
+        'BACKEND': 'django.template.backends.django.DjangoTemplates',
+        'DIRS': [],
+        'APP_DIRS': True,
+        'OPTIONS': {
+            'context_processors': [
+                'django.template.context_processors.debug',
+                'django.template.context_processors.request',
+                'django.contrib.auth.context_processors.auth',
+                'django.contrib.messages.context_processors.messages',
+            ],
+        },
+    },
+]
+
+WSGI_APPLICATION = 'customauthenticationview.wsgi.application'
+
+
+# Database
+# https://docs.djangoproject.com/en/5.1/ref/settings/#databases
+
+DATABASES = {
+    'default': {
+        'ENGINE': 'django.db.backends.sqlite3',
+        'NAME': BASE_DIR / 'db.sqlite3',
+    }
+}
+
+
+# Password validation
+# https://docs.djangoproject.com/en/5.1/ref/settings/#auth-password-validators
+
+AUTH_PASSWORD_VALIDATORS = [
+    {
+        'NAME': 'django.contrib.auth.password_validation.UserAttributeSimilarityValidator',
+    },
+    {
+        'NAME': 'django.contrib.auth.password_validation.MinimumLengthValidator',
+    },
+    {
+        'NAME': 'django.contrib.auth.password_validation.CommonPasswordValidator',
+    },
+    {
+        'NAME': 'django.contrib.auth.password_validation.NumericPasswordValidator',
+    },
+]
+
+
+# Internationalization
+# https://docs.djangoproject.com/en/5.1/topics/i18n/
+
+LANGUAGE_CODE = 'en-us'
+
+TIME_ZONE = 'UTC'
+
+USE_I18N = True
+
+USE_TZ = True
+
+
+# Static files (CSS, JavaScript, Images)
+# https://docs.djangoproject.com/en/5.1/howto/static-files/
+
+STATIC_URL = 'static/'
+
+# Default primary key field type
+# https://docs.djangoproject.com/en/5.1/ref/settings/#default-auto-field
+
+DEFAULT_AUTO_FIELD = 'django.db.models.BigAutoField'
+
+LOGIN_REDIRECT_URL = '/dashboard/'
+```
+
+customauthenticationview/urls.py
+```python
+from django.contrib import admin
+from django.urls import path, include 
+from django.contrib.auth import views as auth_views 
+from django.views.generic import TemplateView 
+from myapp.forms import LoginForm
+
+urlpatterns = [
+    path('admin/', admin.site.urls),
+    path('', TemplateView.as_view(template_name='myapp/home.html'), name='home'),
+    path('dashboard/', TemplateView.as_view(template_name='myapp/dashboard.html'), name='dashboard'),
+    path('login/', auth_views.LoginView.as_view(template_name='myapp/login.html', authentication_form=LoginForm), name='login'),
+    path('logout/', auth_views.LogoutView.as_view(template_name='myapp/logout.html'), name='logout'),
+    path('changepass/', auth_views.PasswordChangeView.as_view(template_name='myapp/changepass.html', success_url='/changepassdone/'), name='changepass'),
+    path('changepassdone/', auth_views.PasswordChangeDoneView.as_view(template_name='myapp/changepassdone.html'), name='changepassdone'),
+]
+```
+
+myapp/templates/myapp/changepass.html
+```html
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Document</title>
+</head>
+<body>
+    <form action="" method="post">
+        {% csrf_token %}
+        {{form.as_p}}
+        <input type="submit" value="Save">
+        <a href="{% url 'dashboard' %}">Cancel</a>
+    </form>
+</body>
+</html>
+```
+
+myapp/templates/myapp/changepassdone.html
+```html
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Document</title>
+</head>
+<body>
+    <h1>Password Changed Successfully</h1>
+    <a href="{% url 'dashboard' %}">Back to Dashboard</a>
+</body>
+</html>
+```
+
+myapp/templates/myapp/dashboard.html
+```html
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Document</title>
+</head>
+<body>
+    <h1>Welcome to Dashboard Page</h1>
+    <a href="{% url 'logout' }">Logout Button</a>
+    <a href="{% url 'changepass' %}">Change Password</a>
+</body>
+</html>
+```
+
+myapp/templates/myapp/home.html
+```html
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Document</title>
+</head>
+<body>
+    <h1>Home Page</h1>
+</body>
+</html>
+```
+
+myapp/templates/myapp/login.html
+```html
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Document</title>
+    <style>
+        .myuser{
+            color: red;
+            background-color: yellow;
+        }
+        .mypass{
+            color: white;
+            background-color: blue;
+        }
+    </style>
+</head>
+<body>
+    <form action="" method="post" novalidate>
+        {% csrf_token %}
+        {{form.as_p}}
+        <input type="submit" value="Login"> 
+    </form>
+</body>
+</html>
+```
+
+myapp/templates/myapp/logout.html
+```html
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Document</title>
+</head>
+<body>
+    <h1>Logout is successfull</h1>
+    <a href="{% url 'login' %}">Login again</a>
+</body>
+</html>
+```
+
+myapp/forms.py
+```python
+from django import forms 
+from django.contrib.auth.forms import AuthenticationForm, UsernameField
+from django.utils.translation import gettext, gettext_lazy as _
+
+class LoginForm(AuthenticationForm):
+    username = UsernameField(widget=forms.TextInput(attrs={'autofocus': True, 'class':'myuser'}))
+    password = forms.CharField(
+        label=_("Password"),
+        strip = False, 
+        widget = forms.PasswordInput(attrs={'autocomplete':'current-password', 'class':'mypass'}),
+    )
+```
+
+Where to find the full code
+```text
+check customauthenticationview
+```
+
+What we can learn here 
+```text
+customauthentication
+custom templates 
+```
