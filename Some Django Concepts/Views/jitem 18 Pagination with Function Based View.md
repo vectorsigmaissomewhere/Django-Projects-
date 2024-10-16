@@ -80,3 +80,216 @@ Using Pagination
 ```
 
 ## Coding Part 
+
+functionbasedpagination/settings.py
+```python
+from pathlib import Path
+
+# Build paths inside the project like this: BASE_DIR / 'subdir'.
+BASE_DIR = Path(__file__).resolve().parent.parent
+
+
+# Quick-start development settings - unsuitable for production
+# See https://docs.djangoproject.com/en/5.1/howto/deployment/checklist/
+
+# SECURITY WARNING: keep the secret key used in production secret!
+SECRET_KEY = 'django-insecure-9l9f7nk+4_r71bmx@32%s4gv$ke-%!366ay3-=wm096!z@vxs('
+
+# SECURITY WARNING: don't run with debug turned on in production!
+DEBUG = True
+
+ALLOWED_HOSTS = []
+
+
+# Application definition
+
+INSTALLED_APPS = [
+    'django.contrib.admin',
+    'django.contrib.auth',
+    'django.contrib.contenttypes',
+    'django.contrib.sessions',
+    'django.contrib.messages',
+    'django.contrib.staticfiles',
+    'blog',
+]
+
+MIDDLEWARE = [
+    'django.middleware.security.SecurityMiddleware',
+    'django.contrib.sessions.middleware.SessionMiddleware',
+    'django.middleware.common.CommonMiddleware',
+    'django.middleware.csrf.CsrfViewMiddleware',
+    'django.contrib.auth.middleware.AuthenticationMiddleware',
+    'django.contrib.messages.middleware.MessageMiddleware',
+    'django.middleware.clickjacking.XFrameOptionsMiddleware',
+]
+
+ROOT_URLCONF = 'functionbasedpagination.urls'
+
+TEMPLATES = [
+    {
+        'BACKEND': 'django.template.backends.django.DjangoTemplates',
+        'DIRS': [],
+        'APP_DIRS': True,
+        'OPTIONS': {
+            'context_processors': [
+                'django.template.context_processors.debug',
+                'django.template.context_processors.request',
+                'django.contrib.auth.context_processors.auth',
+                'django.contrib.messages.context_processors.messages',
+            ],
+        },
+    },
+]
+
+WSGI_APPLICATION = 'functionbasedpagination.wsgi.application'
+
+
+# Database
+# https://docs.djangoproject.com/en/5.1/ref/settings/#databases
+
+DATABASES = {
+    'default': {
+        'ENGINE': 'django.db.backends.sqlite3',
+        'NAME': BASE_DIR / 'db.sqlite3',
+    }
+}
+
+
+# Password validation
+# https://docs.djangoproject.com/en/5.1/ref/settings/#auth-password-validators
+
+AUTH_PASSWORD_VALIDATORS = [
+    {
+        'NAME': 'django.contrib.auth.password_validation.UserAttributeSimilarityValidator',
+    },
+    {
+        'NAME': 'django.contrib.auth.password_validation.MinimumLengthValidator',
+    },
+    {
+        'NAME': 'django.contrib.auth.password_validation.CommonPasswordValidator',
+    },
+    {
+        'NAME': 'django.contrib.auth.password_validation.NumericPasswordValidator',
+    },
+]
+
+
+# Internationalization
+# https://docs.djangoproject.com/en/5.1/topics/i18n/
+
+LANGUAGE_CODE = 'en-us'
+
+TIME_ZONE = 'UTC'
+
+USE_I18N = True
+
+USE_TZ = True
+
+
+# Static files (CSS, JavaScript, Images)
+# https://docs.djangoproject.com/en/5.1/howto/static-files/
+
+STATIC_URL = 'static/'
+
+# Default primary key field type
+# https://docs.djangoproject.com/en/5.1/ref/settings/#default-auto-field
+
+DEFAULT_AUTO_FIELD = 'django.db.models.BigAutoField'
+```
+
+functionbasedpagination/urls.py
+```python
+from django.contrib import admin
+from django.urls import path
+from blog import views 
+
+urlpatterns = [
+    path('admin/', admin.site.urls),
+    path('', views.post_list, name='home'),
+]
+```
+
+blog/templates/blog/home.html
+```html
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Document</title>
+</head>
+<body>
+    <h1>Home Page</h1>
+    {% for post in page_obj%}
+    <h2>{{post.title}}</h2>
+    <p>{{post.desc}}</p>
+    <small>{{post.publish_date}}</small>
+    {% endfor %}
+    <div>
+        <span>
+            {% if page_obj.has_previous %}
+            <a href="?page={{page_obj.previous_page_number}}">Previous</a>
+            {% endif %}
+            <span>{{page_obj.number}}</span>
+            {% if page_obj.has_next %}
+            <a href="?page={{page_obj.next_page_number}}">Next</a>
+            {% endif %}
+        </span>
+    </div>
+</body>
+</html>
+```
+
+blog/admin.py
+```python
+from django.contrib import admin
+from .models import Post
+# Register your models here.
+
+@admin.register(Post)
+class PostAdmin(admin.ModelAdmin):
+    list_display = ['id', 'title', 'desc', 'publish_date']
+```
+
+blog/models.py
+```python
+from django.db import models
+
+# Create your models here.
+class Post(models.Model):
+    title = models.CharField(max_length=100)
+    desc = models.TextField(max_length=500)
+    publish_date = models.DateTimeField()
+```
+
+blog/views.py
+```python
+from django.shortcuts import render
+from .models import Post 
+from django.core.paginator import Paginator 
+
+# Create your views here.
+def post_list(request):
+    all_post = Post.objects.all().order_by('id')
+    paginator = Paginator(all_post, 2, orphans=1) # 2 items in one page # orphans = 1 cause there was 1 item in last page 
+    page_number = request.GET.get('page')
+    page_obj = paginator.get_page(page_number)
+    print('All_Post=', all_post)
+    print()
+    print('Paginator=', paginator)
+    print()
+    print('Page_Number=', page_number)
+    print()
+    print('Page_obj=', page_obj)
+    return render(request, 'blog/home.html', {'page_obj':page_obj})
+```
+
+Where to find the full code 
+```text
+check functionbasedpagination
+```
+
+What to learn here
+```text
+Show content in limit in a page using pagination
+``
