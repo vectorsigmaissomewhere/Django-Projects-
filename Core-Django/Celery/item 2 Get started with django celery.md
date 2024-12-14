@@ -8,4 +8,9 @@ redis-server -> check redis folder in terminal and hit "redis-sever"
 note: myceleryproject is my project name 
 ```
 
+Website to know more about django celery
+```text
+https://docs.celeryq.dev/en/latest/django/first-steps-with-django.html
+```
+
 If you want to learn django celery add issue in this repo
