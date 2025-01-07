@@ -1,1 +1,1 @@
-# understanding and implenting in application and documenting what I am learning 
+# understanding and implementing in application and documenting what I am learning 
