@@ -4,6 +4,8 @@ Tick Mark Which concept you know
 
 ```text
 drf
+channel
+celery
 cookies
 custom user model
 custom middleware
